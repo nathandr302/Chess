@@ -13,3 +13,10 @@ Phase 5:
     -
 Phase 6:
     -
+
+FRAME
+    
+EXPLORE
+DESIGN
+BUILD
+TEST
