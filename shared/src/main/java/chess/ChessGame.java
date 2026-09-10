@@ -43,12 +43,24 @@ public class ChessGame {
     /**
      * Gets all valid moves for a piece at the given location
      *
+     * ALL pieces
+     *      all pieces must be with in the given range of the playing board (ie. 0 -> 7 OR 1-9) starting and ending positions must be with in that range.
+     *      if 0 <= (startRow OR startCol OR endRow OR endCOl) <= 7 then return valid move else throw(invalid move)
+     *
+     *
+     * Bishop move type
+     *      valid move = endPosistion-startPosition then take the difference of the rows and the difference of the cols and divide them (rowDif/colDif) if the absolute value of that differnece is equal to 1 then it is a valid move
+     *      if abs((endRow-startRow)/(endCol-StartCol)) == 1 then move is valid
+ *   *  Rook move type
+     *      A valid move would be if the startRow is equal to endRow and the cols 
+     *
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         throw new RuntimeException("Not implemented");
+
     }
 
     /**
@@ -70,6 +82,9 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
 
         throw new RuntimeException("Not implemented");
+        /**
+
+         */
     }
 
     /**
@@ -90,8 +105,8 @@ public class ChessGame {
      * @param teamColor which team to check for stalemate
      * @return True if the specified team is in stalemate, otherwise false
      */
-    public boolean isInStalemate(TeamColor teamColor) {
-
+    public boolean isInStalemate(TeamColor teamColor)
+    {
         throw new RuntimeException("Not implemented");
     }
 

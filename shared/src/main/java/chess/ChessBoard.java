@@ -8,7 +8,7 @@ package chess;
  */
 public class ChessBoard {
 
-    ChessPiece[][] squares = new ChessPiece[8][8];
+    ChessPiece[][] Board = new ChessPiece[8][8];
     public ChessBoard()
     {
         
@@ -22,7 +22,7 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece)
     {
-        squares[position.getRow()-1][position.getColumn()-1] = piece;
+        Board[position.getRow()-1][position.getColumn()-1] = piece;
     }
 
     /**
@@ -34,7 +34,7 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position)
     {
-        return squares[position.getRow()-1][position.getColumn()-1];
+        return Board[position.getRow()-1][position.getColumn()-1];
     }
 
     /**
@@ -43,6 +43,6 @@ public class ChessBoard {
      */
     public void resetBoard()
     {
-        throw new RuntimeException("Not implemented");
+
     }
 }
