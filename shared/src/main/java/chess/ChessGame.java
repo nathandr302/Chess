@@ -59,8 +59,14 @@ public class ChessGame {
      *      if abs((endRow-startRow)/(endCol-StartCol)) == 1 then move is valid, else throw(invalidMove)
      *      --(put this in a try catch??)
      *
- *   *  Rook move type
+ *   * Rook move type
      *      A valid move would be if the startRow is equal to endRow and the cols changes OR startCol and endCol are equal to each other while the row changes
+     *
+     *      if startRow == endRow, then valid move, else throw(invalidMove)
+     *      if startCol == endCol, then valid move, else throw(invalidMove)
+     *
+     * Queen move type
+     *      A Queen inhariets moved from both Bishops AND Rooks. however it is either the Rook or the Bishop moveset not both at the same time.
      *
      *
      *
