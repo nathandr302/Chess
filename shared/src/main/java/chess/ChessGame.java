@@ -68,6 +68,12 @@ public class ChessGame {
      * Queen move type
      *      A Queen inhariets moved from both Bishops AND Rooks. however it is either the Rook or the Bishop moveset not both at the same time.
      *
+     * King move Type
+     *
+     * Pawn move type
+     *
+     * Knight move type
+     *
      *
      *
      * @param startPosition the piece to get valid moves for
