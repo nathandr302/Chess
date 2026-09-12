@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -9,9 +12,9 @@ package chess;
 public class ChessBoard {
 
     ChessPiece[][] Board = new ChessPiece[8][8];
-    public ChessBoard()
-    {
-        
+
+    public ChessBoard() {
+
     }
 
     /**
@@ -20,9 +23,12 @@ public class ChessBoard {
      * @param position where to add the piece to
      * @param piece    the piece to add
      */
-    public void addPiece(ChessPosition position, ChessPiece piece)
-    {
-        Board[position.getRow()][position.getColumn()] = piece;
+    public void addPiece(ChessPosition position, ChessPiece piece) {
+        //
+        if ((0 < position.getColumn() && position.getColumn() < 8) &&
+                (0 < position.getRow() && position.getRow() < 8)) {
+            Board[position.getRow() - 1][position.getColumn() - 1] = piece;
+        }
     }
 
     /**
@@ -32,17 +38,29 @@ public class ChessBoard {
      * @return Either the piece at the position, or null if no piece is at that
      * position
      */
-    public ChessPiece getPiece(ChessPosition position)
-    {
-        return Board[position.getRow()][position.getColumn()];
+    public ChessPiece getPiece(ChessPosition position) {
+        return Board[position.getRow()-1][position.getColumn()-1];
     }
 
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
-    public void resetBoard()
-    {
+    public void resetBoard() {
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(Board, that.Board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(Board);
     }
 }
