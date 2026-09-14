@@ -109,7 +109,7 @@ public class ChessGame {
     /**
      * Validates if positions past in is with in board range.
      * @param movePosition starting or ending position
-     * Returns True or False
+     * @return True or False
      */
     private boolean startEndValidate(ChessPosition movePosition){
         return (0 < movePosition.getRow() && movePosition.getRow() < 8) && (0 < movePosition.getColumn() && movePosition.getColumn() < 8);
