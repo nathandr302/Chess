@@ -56,18 +56,11 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition)
     {
-        PieceMovesCalculator(type, myPosition);
-
-
-
         ChessPiece piece = board.getPiece(myPosition);
         if (piece.getPieceType() == PieceType.BISHOP){
             return List.of(new ChessMove(new ChessPosition(5,4), new ChessPosition(2,5), null));
         }
         return List.of();
-
-
-        return List.of(PieceMovesCalculator);
     }
 
     @Override
@@ -83,54 +76,4 @@ public class ChessPiece {
     public int hashCode() {
         return Objects.hash(pieceColor, type);
     }
-}
-
-/**
- * calculates all the possible move that a single piece can have
- * @param myPosition current posision of the piece
- * @param type the piece type to dictate the move method
- * @return a collection of  all posiable moves
- */
-public Collection<ChessMove> PieceMovesCalculator(ChessPosition myPosition, ChessPiece.PieceType type){
-    Collection<ChessMove> listValidMoves = List.of();
-
-    switch(type){
-        case KING: return KingMovesCalculator(myPosition);
-        case QUEEN: return QueenMovesCalculator(myPosition);
-        case BISHOP: return BishopMovesCalculator(myPosition);
-        case KNIGHT: return KnightMovesCalculator(myPosition);
-        case ROOK: return RookMovesCalculator(myPosition);
-        case PAWN: return PawnMovesCalculator(myPosition);
-    }
-    return listValidMoves;
-}
-
-public Collection<ChessMove> KingMovesCalculator(ChessPosition myPosition){
-    Collection<ChessMove> listValidMoves = List.of();
-
-    return listValidMoves;
-}
-public Collection<ChessMove> QueenMovesCalculator(ChessPosition myPosition){
-    Collection<ChessMove> listValidMoves = List.of();
-
-    return listValidMoves;
-}
-public Collection<ChessMove> KnightMovesCalculator(ChessPosition myPosition){
-
-    return List.of();
-}
-public Collection<ChessMove> PawnMovesCalculator(ChessPosition myPosition){
-    Collection<ChessMove> listValidMoves = List.of();
-
-    return listValidMoves;
-}
-public Collection<ChessMove> BishopMovesCalculator(ChessPosition myPosition){
-    Collection<ChessMove> listValidMoves = List.of();
-
-    return listValidMoves;
-}
-public Collection<ChessMove> RookMovesCalculator(ChessPosition myPosition){
-    Collection<ChessMove> listValidMoves = List.of();
-
-    return listValidMoves;
 }

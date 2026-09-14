@@ -81,8 +81,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-
-
+        throw new RuntimeException("Not implemented");
 
     }
 
@@ -101,15 +100,10 @@ public class ChessGame {
         if(!(startEndValidate(endMove) && startEndValidate(startMove))) {
             throw new InvalidMoveException("Starting AND/OR ending Poristion not within range.");
         }
-        /**
-         * next check and find all the valid moves
-         */
-        validMoves(startMove);
     }
     /**
-     * Validates if positions past in is with in board range.
+     * Validates if positions past in is with in
      * @param movePosition starting or ending position
-     * @return True or False
      */
     private boolean startEndValidate(ChessPosition movePosition){
         return (0 < movePosition.getRow() && movePosition.getRow() < 8) && (0 < movePosition.getColumn() && movePosition.getColumn() < 8);
