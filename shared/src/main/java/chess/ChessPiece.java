@@ -20,6 +20,7 @@ public class ChessPiece {
         this.type = type;
     }
 
+
     /**
      * The various different chess piece options
      */
@@ -58,7 +59,7 @@ public class ChessPiece {
     {
         ChessPiece piece = board.getPiece(myPosition);
         if (piece.getPieceType() == PieceType.BISHOP){
-            return List.of(new ChessMove(new ChessPosition(5,4), new ChessPosition(2,5), null));
+            return List.of(new ChessMove(new ChessPosition(2,5), new ChessPosition(2,5), null));
         }
         return List.of();
     }

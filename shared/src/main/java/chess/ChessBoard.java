@@ -25,10 +25,7 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         //
-        if (((0 <= position.getColumn()) && (position.getColumn() <= 7)) &&
-                ((0 <= position.getRow()) && (position.getRow() <= 7))) {
-            Board[position.getRow() - 1][position.getColumn() - 1] = piece;
-        }
+        Board[position.getRow()-1][position.getColumn()-1] = piece;
     }
 
     /**
@@ -39,7 +36,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return Board[position.getRow()][position.getColumn()];
+        return Board[position.getRow()-1][position.getColumn()-1];
     }
 
     /**
