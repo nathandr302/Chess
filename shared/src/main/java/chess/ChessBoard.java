@@ -25,8 +25,8 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         //
-        if ((0 < position.getColumn() && position.getColumn() < 8) &&
-                (0 < position.getRow() && position.getRow() < 8)) {
+        if (((0 <= position.getColumn()) && (position.getColumn() <= 7)) &&
+                ((0 <= position.getRow()) && (position.getRow() <= 7))) {
             Board[position.getRow() - 1][position.getColumn() - 1] = piece;
         }
     }
