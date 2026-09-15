@@ -58,10 +58,64 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition)
     {
         ChessPiece piece = board.getPiece(myPosition);
+
+        List<ChessMove> validMoves = new java.util.ArrayList<>(List.of());
         if (piece.getPieceType() == PieceType.BISHOP){
-            return List.of(new ChessMove(new ChessPosition(2,5), new ChessPosition(2,5), null));
+
+            for (int i = myPosition.getRow()+1, j = myPosition.getColumn()+1; i  <= 8 && j<=8; i++, j++){
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i,j), null));
+            }
+            for (int i = myPosition.getRow()+1, j = myPosition.getColumn()-1; i  <= 8 && j>=1; i++, j--){
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i,j), null));
+            }
+            for (int i = myPosition.getRow()-1, j = myPosition.getColumn()+1; i  >= 1 && j<=8; i--, j++){
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i,j), null));
+            }
+            for (int i = myPosition.getRow()-1, j = myPosition.getColumn()-1; i  >= 1 && j>= 1; i--, j--){
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i,j), null));
+            }
+        } else if (piece.getPieceType() == PieceType.ROOK) {
+            for (int i = myPosition.getRow() + 1; i <= 8; i++) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i, myPosition.getColumn()), null));
+            }
+            for (int i = myPosition.getRow() - 1; i >= 1; i--) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i, myPosition.getColumn()), null));
+            }
+            for (int i = myPosition.getColumn() + 1; i <= 8; i++) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow(), i), null));
+            }
+            for (int i = myPosition.getColumn() - 1; i >= 1; i--) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow(), i), null));
+            }
+        } else if (piece.getPieceType() == PieceType.QUEEN) {
+            //vert and horz moves
+            for (int i = myPosition.getRow() + 1; i <= 8; i++) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i, myPosition.getColumn()), null));
+            }
+            for (int i = myPosition.getRow() - 1; i >= 1; i--) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i, myPosition.getColumn()), null));
+            }
+            for (int i = myPosition.getColumn() + 1; i <= 8; i++) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow(), i), null));
+            }
+            for (int i = myPosition.getColumn() - 1; i >= 1; i--) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow(), i), null));
+            }
+            for (int i = myPosition.getRow()+1, j = myPosition.getColumn()+1; i  <= 8 && j<=8; i++, j++){
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i,j), null));
+            }
+            for (int i = myPosition.getRow()+1, j = myPosition.getColumn()-1; i  <= 8 && j>=1; i++, j--){
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i,j), null));
+            }
+            for (int i = myPosition.getRow()-1, j = myPosition.getColumn()+1; i  >= 1 && j<=8; i--, j++){
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i,j), null));
+            }
+            for (int i = myPosition.getRow()-1, j = myPosition.getColumn()-1; i  >= 1 && j>= 1; i--, j--) {
+                validMoves.add(new ChessMove(myPosition, new ChessPosition(i, j), null));
+            }
         }
-        return List.of();
+
+        return validMoves;
     }
 
     @Override
