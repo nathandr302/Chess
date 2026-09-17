@@ -9,9 +9,9 @@ public class Rules {
 
     public Rules(){
         rules.put(BISHOP, new BishopMovementRule());
-        // rules.put(KING, new KingMovementRule());
-        // rules.put(KNIGHT, new KnightMovementRule());
-        // rules.put(PAWN, new PawnMovementRule());
+        rules.put(KING, new KingMovementRule());
+        rules.put(KNIGHT, new KnightMovementRule());
+        rules.put(PAWN, new PawnMovementRule());
         rules.put(QUEEN, new QueenMovementRule());
         rules.put(ROOK, new RookMovementRule());
     }
