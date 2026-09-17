@@ -13,7 +13,7 @@ public class KnightMovementRule extends BaseMovementRule{
         calculateMoves(board, position, 2,  1, moves, false);
         calculateMoves(board, position, -2, 1, moves, false);
         calculateMoves(board, position, -2, -1, moves, false);
-        // cross col l moves
+        // cross col L moves
         calculateMoves(board, position, -1, 2, moves, false);
         calculateMoves(board, position, 1, 2, moves, false);
         calculateMoves(board, position, -1, -2, moves, false);
