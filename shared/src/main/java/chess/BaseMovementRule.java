@@ -5,24 +5,26 @@ import java.util.Collection;
 
 public  abstract class BaseMovementRule implements MovementRule{
     protected void calculateMoves (ChessBoard board, ChessPosition pos, int rowInc, int colInc, Collection<ChessMove> moves, boolean allowDistance){
-        if(pos.getRow()+rowInc > 8 && pos.getColumn()+colInc > 8 &&
-                pos.getRow()+rowInc < 1 && pos.getColumn()+colInc < 1){
-            return;
-        }
-
         ChessPosition newPosition = new ChessPosition(pos.getRow()+rowInc, pos.getColumn()+colInc);
 
-        if(board.getPiece(newPosition) instanceof ChessPiece){
-            if (board.getPiece(pos).getTeamColor() == board.getPiece(newPosition).getTeamColor()){
-                return;
+        while ((newPosition.getRow()+rowInc <= 9 && newPosition.getColumn()+colInc <= 9 &&
+                newPosition.getRow()+rowInc >= 0 && newPosition.getColumn()+colInc >= 0)){
+
+            if(board.getPiece(newPosition) instanceof ChessPiece){
+                if (board.getPiece(pos).getTeamColor() == board.getPiece(newPosition).getTeamColor()){
+                    break;
+                }
+                else{
+                    moves.add(new ChessMove(pos, newPosition, null));
+                    break;
+                }
             }
             else{
                 moves.add(new ChessMove(pos, newPosition, null));
             }
+            newPosition = new ChessPosition(newPosition.getRow()+rowInc, newPosition.getColumn()+colInc);
         }
-        else{
-            moves.add(new ChessMove(pos, newPosition, null));
-        }
+
     }
     public abstract Collection<ChessMove> moves(ChessBoard board, ChessPosition pos);
 }

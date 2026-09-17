@@ -115,7 +115,7 @@ public class ChessPiece {
 //
 //        return validMoves;
         Rules rules = new Rules();
-       return rules.pieceRule(this.type).move(board, myPosition);
+        return rules.pieceRule(this.type).moves(board, myPosition);
 
     }
 
