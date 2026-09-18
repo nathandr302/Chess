@@ -13,16 +13,14 @@ public class PawnMovementRule extends BaseMovementRule {
         var currentCol = position.getColumn();
         int rowDirection = 0;
         int rowStart = 0;
-        int proRow = 0;
 
         if (board.getPiece(position).getTeamColor() == ChessGame.TeamColor.BLACK) {
             rowDirection = -1;
             rowStart = 7;
-            proRow = 1;
+
         } else if (board.getPiece(position).getTeamColor() == ChessGame.TeamColor.WHITE) {
             rowDirection = 1;
             rowStart = 2;
-            proRow = 8;
         }
         // move forward
         if (!(board.getPiece(new ChessPosition(currentRow + rowDirection, currentCol)) instanceof ChessPiece)) {
@@ -42,6 +40,7 @@ public class PawnMovementRule extends BaseMovementRule {
                 calculateMoves(board, position, rowDirection, -1, moves, false);
             }
         }
+
         return moves;
     }
 }
