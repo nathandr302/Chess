@@ -44,6 +44,11 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        clearBoard();
+
+    }
+
+    private void clearBoard() {
 
     }
 

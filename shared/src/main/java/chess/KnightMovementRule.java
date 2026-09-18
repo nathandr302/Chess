@@ -4,19 +4,20 @@ import java.util.Collection;
 import java.util.HashSet;
 
 
-public class KnightMovementRule extends BaseMovementRule{
+public class KnightMovementRule extends BaseMovementRule {
     @Override
-    public Collection<ChessMove> moves(ChessBoard board, ChessPosition position){
+    public Collection<ChessMove> moves(ChessBoard board, ChessPosition position) {
         var moves = new HashSet<ChessMove>();
         // cross row L moves
-        calculateMoves(board, position, 2, -1, moves, false);
-        calculateMoves(board, position, 2,  1, moves, false);
-        calculateMoves(board, position, -2, 1, moves, false);
         calculateMoves(board, position, -2, -1, moves, false);
+        calculateMoves(board, position, -2, 1, moves, false);
+        calculateMoves(board, position, 2, -1, moves, false);
+        calculateMoves(board, position, 2, 1, moves, false);
+
         // cross col L moves
         calculateMoves(board, position, -1, 2, moves, false);
-        calculateMoves(board, position, 1, 2, moves, false);
         calculateMoves(board, position, -1, -2, moves, false);
+        calculateMoves(board, position, 1, 2, moves, false);
         calculateMoves(board, position, 1, -2, moves, false);
 
         return moves;
