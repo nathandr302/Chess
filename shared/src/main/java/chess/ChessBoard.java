@@ -46,9 +46,21 @@ public class ChessBoard {
     }
 
     /**
+     * removes the piece at position
+     *
+     * @param position the position to get the piece from
+     *
+     */
+    public void removePiece(ChessPosition position){
+        Board[position.getRow()-1][position.getColumn()-1] = null;
+    }
+
+
+    /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
+
 
     public void resetBoard() {
         Board = new ChessPiece[8][8];
