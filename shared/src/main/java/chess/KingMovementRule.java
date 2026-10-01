@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 
-public class KingMovementRule extends BaseMovementRule{
+public class KingMovementRule extends BaseMovementRule {
     @Override
-    public Collection<ChessMove> moves(ChessBoard board, ChessPosition position){
+    public Collection<ChessMove> moves(ChessBoard board, ChessPosition position) {
         var moves = new HashSet<ChessMove>();
         //diag moves
         calculateMoves(board, position, -1, -1, moves, false);

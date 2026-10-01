@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 
-public class BishopMovementRule extends BaseMovementRule{
+public class BishopMovementRule extends BaseMovementRule {
     @Override
-    public Collection<ChessMove> moves(ChessBoard board, ChessPosition position){
+    public Collection<ChessMove> moves(ChessBoard board, ChessPosition position) {
         var moves = new HashSet<ChessMove>();
         calculateMoves(board, position, -1, -1, moves, true);
         calculateMoves(board, position, 1, -1, moves, true);

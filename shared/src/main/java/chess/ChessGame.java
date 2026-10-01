@@ -33,48 +33,38 @@ public class ChessGame {
     }
 
     /**
-     * Enum identifying the 2 possible teams in a chess game
-     */
-    public enum TeamColor {
-        WHITE,
-        BLACK
-    }
-
-    /**
      * Gets all valid moves for a piece at the given location
-     *
+     * <p>
      * ALL pieces
-     *      all pieces must be with in the given range of the playing board (ie. 0 -> 7 OR 1->8) starting and ending positions must be with in that range.
-     *      if 0 <= (startRow OR startCol OR endRow OR endCOl) <= 7, then return valid move, else throw(invalid move)
-     *
-     *      then we need to check if the starting position of the piece and the ending position of the piece are the same,
-     *
-     *      if startPosition == endPosition, then throw invalidMove,
-     *
-     *
+     * all pieces must be with in the given range of the playing board (ie. 0 -> 7 OR 1->8) starting and ending positions must be with in that range.
+     * if 0 <= (startRow OR startCol OR endRow OR endCOl) <= 7, then return valid move, else throw(invalid move)
+     * <p>
+     * then we need to check if the starting position of the piece and the ending position of the piece are the same,
+     * <p>
+     * if startPosition == endPosition, then throw invalidMove,
+     * <p>
+     * <p>
      * Bishop move type
-     *      valid move = endPosistion-startPosition then take the difference of the rows and the difference of the cols and divide them (rowDif/colDif)
-     *          if the absolute value of that differnece is equal to 1 then it is a valid move, if in any other case, like divide by zero or the abs is not equal to 1 then throw(invalid move)
-     *
-     *      if abs((endRow-startRow)/(endCol-StartCol)) == 1 then move is valid, else throw(invalidMove)
-     *      --(put this in a try catch??)
-     *
- *   * Rook move type
-     *      A valid move would be if the startRow is equal to endRow and the cols changes OR startCol and endCol are equal to each other while the row changes
-     *
-     *      if startRow == endRow, then valid move, else throw(invalidMove)
-     *      if startCol == endCol, then valid move, else throw(invalidMove)
-     *
+     * valid move = endPosistion-startPosition then take the difference of the rows and the difference of the cols and divide them (rowDif/colDif)
+     * if the absolute value of that differnece is equal to 1 then it is a valid move, if in any other case, like divide by zero or the abs is not equal to 1 then throw(invalid move)
+     * <p>
+     * if abs((endRow-startRow)/(endCol-StartCol)) == 1 then move is valid, else throw(invalidMove)
+     * --(put this in a try catch??)
+     * <p>
+     * * Rook move type
+     * A valid move would be if the startRow is equal to endRow and the cols changes OR startCol and endCol are equal to each other while the row changes
+     * <p>
+     * if startRow == endRow, then valid move, else throw(invalidMove)
+     * if startCol == endCol, then valid move, else throw(invalidMove)
+     * <p>
      * Queen move type
-     *      A Queen inhariets moved from both Bishops AND Rooks. however it is either the Rook or the Bishop moveset not both at the same time.
-     *
+     * A Queen inhariets moved from both Bishops AND Rooks. however it is either the Rook or the Bishop moveset not both at the same time.
+     * <p>
      * King move Type
-     *
+     * <p>
      * Pawn move type
-     *
+     * <p>
      * Knight move type
-     *
-     *
      *
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at
@@ -97,15 +87,17 @@ public class ChessGame {
          */
         ChessPosition startMove = move.getStartPosition();
         ChessPosition endMove = move.getEndPosition();
-        if(!(startEndValidate(endMove) && startEndValidate(startMove))) {
+        if (!(startEndValidate(endMove) && startEndValidate(startMove))) {
             throw new InvalidMoveException("Starting AND/OR ending Poristion not within range.");
         }
     }
+
     /**
      * Validates if positions past in is with in
+     *
      * @param movePosition starting or ending position
      */
-    private boolean startEndValidate(ChessPosition movePosition){
+    private boolean startEndValidate(ChessPosition movePosition) {
         return (0 < movePosition.getRow() && movePosition.getRow() < 8) && (0 < movePosition.getColumn() && movePosition.getColumn() < 8);
     }
 
@@ -141,8 +133,17 @@ public class ChessGame {
      * @param teamColor which team to check for stalemate
      * @return True if the specified team is in stalemate, otherwise false
      */
-    public boolean isInStalemate(TeamColor teamColor)
-    {
+    public boolean isInStalemate(TeamColor teamColor) {
+        throw new RuntimeException("Not implemented");
+    }
+
+    /**
+     * Gets the current chessboard
+     *
+     * @return the chessboard
+     */
+    public ChessBoard getBoard() {
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -157,13 +158,11 @@ public class ChessGame {
     }
 
     /**
-     * Gets the current chessboard
-     *
-     * @return the chessboard
+     * Enum identifying the 2 possible teams in a chess game
      */
-    public ChessBoard getBoard() {
-
-        throw new RuntimeException("Not implemented");
+    public enum TeamColor {
+        WHITE,
+        BLACK
     }
 
 
