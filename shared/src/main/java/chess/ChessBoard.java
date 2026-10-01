@@ -49,20 +49,17 @@ public class ChessBoard {
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
+
     public void resetBoard() {
         Board = new ChessPiece[8][8];
         ArrayList<ChessPiece.PieceType> piece = new ArrayList<>(List.of(ROOK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROOK));
         for (int col = 1; col <= 8; col++) {
             addPiece(new ChessPosition(1, col), new ChessPiece(WHITE, piece.get(col - 1)));
+            addPiece(new ChessPosition(8, col), new ChessPiece(BLACK, piece.get(col - 1)));
         }
         for (int col = 1; col <= 8; col++) {
             addPiece(new ChessPosition(2, col), new ChessPiece(WHITE, PAWN));
-        }
-        for (int col = 1; col <= 8; col++) {
             addPiece(new ChessPosition(7, col), new ChessPiece(BLACK, PAWN));
-        }
-        for (int col = 1; col <= 8; col++) {
-            addPiece(new ChessPosition(8, col), new ChessPiece(BLACK, piece.get(col - 1)));
         }
     }
 
@@ -80,6 +77,4 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(Board);
     }
-
-
 }
