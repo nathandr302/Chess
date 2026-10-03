@@ -51,8 +51,8 @@ public class ChessBoard {
      * @param position the position to get the piece from
      *
      */
-    public void removePiece(ChessPosition position){
-        Board[position.getRow()-1][position.getColumn()-1] = null;
+    public void removePiece(ChessPosition position) {
+        Board[position.getRow() - 1][position.getColumn() - 1] = null;
     }
 
 
@@ -60,8 +60,6 @@ public class ChessBoard {
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
-
-
     public void resetBoard() {
         Board = new ChessPiece[8][8];
         ArrayList<ChessPiece.PieceType> piece = new ArrayList<>(List.of(ROOK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROOK));
@@ -75,6 +73,23 @@ public class ChessBoard {
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBoard = new StringBuilder();
+
+        for (int row = 8; row >= 1; row--) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPiece piece = this.getPiece(new ChessPosition(row, col));
+                if (piece == null) {
+                    stringBoard.append("| |");
+                } else {
+                    stringBoard.append(String.format("|%s|", piece));
+                }
+            }
+            stringBoard.append("\n");
+        }
+        return stringBoard.toString();
+    }
 
     @Override
     public boolean equals(Object o) {

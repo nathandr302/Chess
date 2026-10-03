@@ -11,7 +11,7 @@ import java.util.Objects;
  */
 public class ChessGame {
 
-    ChessBoard gameBoard = new ChessBoard();
+    ChessBoard board = new ChessBoard();
 
     public ChessGame() {
 
@@ -21,7 +21,6 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-
         throw new RuntimeException("Not implemented");
     }
 
@@ -31,51 +30,18 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-
-
+        throw new RuntimeException("Not implemented");
     }
 
     /**
      * Gets all valid moves for a piece at the given location
-     * <p>
-     * ALL pieces
-     * all pieces must be with in the given range of the playing board (ie. 0 -> 7 OR 1->8) starting and ending positions must be with in that range.
-     * if 0 <= (startRow OR startCol OR endRow OR endCOl) <= 7, then return valid move, else throw(invalid move)
-     * <p>
-     * then we need to check if the starting position of the piece and the ending position of the piece are the same,
-     * <p>
-     * if startPosition == endPosition, then throw invalidMove,
-     * <p>
-     * <p>
-     * Bishop move type
-     * valid move = endPosistion-startPosition then take the difference of the rows and the difference of the cols and divide them (rowDif/colDif)
-     * if the absolute value of that differnece is equal to 1 then it is a valid move, if in any other case, like divide by zero or the abs is not equal to 1 then throw(invalid move)
-     * <p>
-     * if abs((endRow-startRow)/(endCol-StartCol)) == 1 then move is valid, else throw(invalidMove)
-     * --(put this in a try catch??)
-     * <p>
-     * * Rook move type
-     * A valid move would be if the startRow is equal to endRow and the cols changes OR startCol and endCol are equal to each other while the row changes
-     * <p>
-     * if startRow == endRow, then valid move, else throw(invalidMove)
-     * if startCol == endCol, then valid move, else throw(invalidMove)
-     * <p>
-     * Queen move type
-     * A Queen inhariets moved from both Bishops AND Rooks. however it is either the Rook or the Bishop moveset not both at the same time.
-     * <p>
-     * King move Type
-     * <p>
-     * Pawn move type
-     * <p>
-     * Knight move type
      *
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        return gameBoard.getPiece(startPosition).pieceMoves(gameBoard, startPosition);
-
+        throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -85,23 +51,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        /**
-         * first check if the start and the ending postions are with in the given range
-         */
-        ChessPosition startMove = move.getStartPosition();
-        ChessPosition endMove = move.getEndPosition();
-        if (!(startEndValidate(endMove) && startEndValidate(startMove))) {
-            throw new InvalidMoveException("Starting AND/OR ending Poristion not within range.");
-        }
-    }
-
-    /**
-     * Validates if positions past in is with in
-     *
-     * @param movePosition starting or ending position
-     */
-    private boolean startEndValidate(ChessPosition movePosition) {
-        return (0 < movePosition.getRow() && movePosition.getRow() < 8) && (0 < movePosition.getColumn() && movePosition.getColumn() < 8);
+        throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -111,11 +61,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-
         throw new RuntimeException("Not implemented");
-        /**
-
-         */
     }
 
     /**
@@ -125,7 +71,6 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-
         throw new RuntimeException("Not implemented");
     }
 
@@ -146,8 +91,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-
-        return gameBoard;
+        return board;
     }
 
     /**
@@ -156,7 +100,6 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-
         throw new RuntimeException("Not implemented");
     }
 
@@ -166,12 +109,12 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) o;
-        return Objects.equals(gameBoard, chessGame.gameBoard);
+        return Objects.equals(board, chessGame.board);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(gameBoard);
+        return Objects.hashCode(board);
     }
 
     /**

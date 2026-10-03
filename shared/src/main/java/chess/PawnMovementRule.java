@@ -74,8 +74,8 @@ public class PawnMovementRule extends BaseMovementRule {
     }
 
     public void pawnHelper(ChessPosition startPos, ChessPosition endPos, Collection<ChessMove> moves, int promoRow) {
-        int endCol = endPos.getRow();
-        if (endCol == promoRow) {
+        int endRow = endPos.getRow();
+        if (endRow == promoRow) {
             moves.add(new ChessMove(startPos, endPos, QUEEN));
             moves.add(new ChessMove(startPos, endPos, KNIGHT));
             moves.add(new ChessMove(startPos, endPos, BISHOP));

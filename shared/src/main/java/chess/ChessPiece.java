@@ -3,6 +3,8 @@ package chess;
 import java.util.Collection;
 import java.util.Objects;
 
+import static chess.ChessGame.TeamColor.BLACK;
+
 /**
  * Represents a single chess piece
  * <p>
@@ -43,6 +45,21 @@ public class ChessPiece {
         Rules rules = new Rules();
         return rules.pieceRule(this.type).moves(board, myPosition);
 
+    }
+
+    @Override
+    public String toString() {
+
+        String symbol = switch (type) {
+            case PAWN -> "P";
+            case ROOK -> "R";
+            case KNIGHT -> "N";
+            case BISHOP -> "B";
+            case KING -> "K";
+            case QUEEN -> "Q";
+            case null, default -> " ";
+        };
+        return pieceColor == BLACK ? symbol.toLowerCase() : symbol;
     }
 
     @Override
