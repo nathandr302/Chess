@@ -11,7 +11,8 @@ import java.util.Objects;
  */
 public class ChessGame {
 
-    ChessBoard board = new ChessBoard();
+    ChessBoard gameBoard = new ChessBoard();
+    TeamColor currentTeam;
 
     public ChessGame() {
 
@@ -21,7 +22,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return currentTeam;
     }
 
     /**
@@ -30,7 +31,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        currentTeam = team;
     }
 
     /**
@@ -41,7 +42,11 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = gameBoard.getPiece(startPosition);
+        if (piece != null) {
+            return piece.pieceMoves(gameBoard, startPosition);
+        }
+        return null;
     }
 
     /**
@@ -51,7 +56,14 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPosition start = move.getStartPosition();
+        ChessPiece startPiece = gameBoard.getPiece(start);
+        if (startPiece == null) {
+            throw new InvalidMoveException("Invalid Move: No piece at starting position");
+        }
+        if (startPiece.getTeamColor() != getTeamTurn()) {
+            throw new InvalidMoveException("Invalid Move: Not teams turn");
+        }
     }
 
     /**
@@ -91,7 +103,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        return board;
+        return gameBoard;
     }
 
     /**
@@ -100,7 +112,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        gameBoard = board;
     }
 
     @Override
@@ -109,12 +121,12 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) o;
-        return Objects.equals(board, chessGame.board);
+        return Objects.equals(gameBoard, chessGame.gameBoard);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(board);
+        return Objects.hashCode(gameBoard);
     }
 
     /**
