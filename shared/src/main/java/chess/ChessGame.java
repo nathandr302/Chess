@@ -66,6 +66,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if (move == null) {
+            throw new InvalidMoveException("Invalid Move: move is empty");
+        }
         ChessPosition start = move.getStartPosition();
         ChessPiece startPiece = gameBoard.getPiece(start);
         if (startPiece == null) {
@@ -78,9 +81,10 @@ public class ChessGame {
         potentialMove = validMoves(start);
         if (potentialMove.contains(move)) {
             ChessPosition end = move.getEndPosition();
-            gameBoard.removePiece(end);
             gameBoard.addPiece(end, startPiece);
             gameBoard.removePiece(start);
+        } else {
+            throw new InvalidMoveException("Invalid Move");
         }
     }
 
@@ -91,18 +95,24 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        Rules pieceRule = new Rules();
+        Rules rule = new Rules();
         for (ChessPiece.PieceType type : ChessPiece.PieceType.values()) {
             Collection<ChessMove> checkMoves;
             if (teamColor == TeamColor.WHITE) {
-                checkMoves = pieceRule(type).moves(gameBoard, whiteKing);
+                checkMoves = rule.pieceRule(type).moves(gameBoard, whiteKing);
             } else {
-                checkMoves = pieceRule(type).moves(gameBoard, whiteKing);
+                checkMoves = rule.pieceRule(type).moves(gameBoard, blackKing);
             }
+            for (ChessMove move : checkMoves) {
+                if ((gameBoard.getPiece(move.getEndPosition()).getPieceType() == type) &&
+                        (gameBoard.getPiece(move.getEndPosition()).getTeamColor() != teamColor)) {
 
+                    return true;
+                }
+            }
         }
 
-
+        return false;
     }
 
     /**
