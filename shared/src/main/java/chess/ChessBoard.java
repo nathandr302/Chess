@@ -23,6 +23,10 @@ public class ChessBoard {
 
     }
 
+    public ChessBoard(ChessBoard other) {
+        this.Board = other.Board;
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
