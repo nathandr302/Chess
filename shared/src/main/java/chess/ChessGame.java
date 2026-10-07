@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -11,11 +12,16 @@ import java.util.Objects;
  */
 public class ChessGame {
 
-    ChessBoard gameBoard = new ChessBoard();
-    TeamColor currentTeam;
+    private final ChessPosition whiteKing;
+    private final ChessPosition blackKing;
+    private ChessBoard gameBoard = new ChessBoard();
+    private TeamColor currentTeam = TeamColor.WHITE;
+
 
     public ChessGame() {
-
+        gameBoard.resetBoard();
+        whiteKing = new ChessPosition(1, 5);
+        blackKing = new ChessPosition(8, 5);
     }
 
     /**
@@ -43,10 +49,14 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = gameBoard.getPiece(startPosition);
+
         if (piece != null) {
-            return piece.pieceMoves(gameBoard, startPosition);
+            return null;
         }
-        return null;
+        Collection<ChessMove> validmoves = new HashSet<>();
+        validmoves = piece.pieceMoves(gameBoard, startPosition);
+
+        return moves;
     }
 
     /**
@@ -64,6 +74,14 @@ public class ChessGame {
         if (startPiece.getTeamColor() != getTeamTurn()) {
             throw new InvalidMoveException("Invalid Move: Not teams turn");
         }
+        Collection<ChessMove> potentialMove;
+        potentialMove = validMoves(start);
+        if (potentialMove.contains(move)) {
+            ChessPosition end = move.getEndPosition();
+            gameBoard.removePiece(end);
+            gameBoard.addPiece(end, startPiece);
+            gameBoard.removePiece(start);
+        }
     }
 
     /**
@@ -73,7 +91,18 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        Rules pieceRule = new Rules();
+        for (ChessPiece.PieceType type : ChessPiece.PieceType.values()) {
+            Collection<ChessMove> checkMoves;
+            if (teamColor == TeamColor.WHITE) {
+                checkMoves = pieceRule(type).moves(gameBoard, whiteKing);
+            } else {
+                checkMoves = pieceRule(type).moves(gameBoard, whiteKing);
+            }
+
+        }
+
+
     }
 
     /**
