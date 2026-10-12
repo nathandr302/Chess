@@ -61,11 +61,12 @@ public class ChessGame {
         for (ChessMove move : moves) {
             ChessBoard tmpBoard = new ChessBoard(gameBoard);
             gameBoard.addPiece(move.getEndPosition(), gameBoard.getPiece(startPosition));
-            if (!(isInCheck(gameBoard.getPiece(move.getStartPosition()).getTeamColor()))) {
+            gameBoard.removePiece(move.getStartPosition());
+            if (!(isInCheck(gameBoard.getPiece(move.getEndPosition()).getTeamColor()))) {
                 vMoves.add(move);
 
             }
-            gameBoard = tmpBoard;
+            gameBoard = new ChessBoard(tmpBoard);
         }
         return vMoves;
     }
@@ -82,18 +83,23 @@ public class ChessGame {
         }
         ChessPosition start = move.getStartPosition();
         ChessPiece startPiece = gameBoard.getPiece(start);
-        ChessPiece.PieceType endtype = move.getPromotionPiece();
         if (startPiece == null) {
             throw new InvalidMoveException("Invalid Move: No piece at start position");
         }
-        if (startPiece.getTeamColor() != getTeamTurn()) {
+        if (startPiece.getTeamColor() != currentTeam) {
             throw new InvalidMoveException("Invalid Move: Not teams turn");
         }
         Collection<ChessMove> potentialMove;
         potentialMove = validMoves(start);
         if (potentialMove.contains(move)) {
+            ChessPiece pieceToMove;
+            if (move.getPromotionPiece() != null) {
+                pieceToMove = new ChessPiece(startPiece.getTeamColor(), move.getPromotionPiece());
+            } else {
+                pieceToMove = startPiece;
+            }
             ChessPosition end = move.getEndPosition();
-            gameBoard.addPiece(end, startPiece);
+            gameBoard.addPiece(end, pieceToMove);
             gameBoard.removePiece(start);
             if (currentTeam == BLACK) {
                 currentTeam = WHITE;
@@ -121,11 +127,10 @@ public class ChessGame {
                         if (gameBoard.getPiece(tmpPos).getTeamColor() == teamColor) {
                             if (gameBoard.getPiece(tmpPos).getTeamColor() == WHITE) {
                                 whiteKingPos = tmpPos;
-                                return;
                             } else {
                                 blackKingPos = tmpPos;
-                                return;
                             }
+                            return;
                         }
                     }
                 }
@@ -143,7 +148,6 @@ public class ChessGame {
         // updates the king's position
         findKing(teamColor);
 
-
         Rules rule = new Rules();
         for (ChessPiece.PieceType type : ChessPiece.PieceType.values()) {
             Collection<ChessMove> checkMoves;
@@ -154,8 +158,7 @@ public class ChessGame {
             }
             for (ChessMove move : checkMoves) {
                 if (gameBoard.getPiece(move.getEndPosition()) != null) {
-                    if ((gameBoard.getPiece(move.getEndPosition()).getPieceType() == type) &&
-                            (gameBoard.getPiece(move.getEndPosition()).getTeamColor() != teamColor)) {
+                    if ((gameBoard.getPiece(move.getEndPosition()).getPieceType() == type) && (gameBoard.getPiece(move.getEndPosition()).getTeamColor() != teamColor)) {
                         return true;
                     }
                 }
@@ -173,12 +176,6 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         throw new RuntimeException("Not implemented");
 
-        // check if already in check
-        // collection pf possiable moves
-        // get all posiable moves that the king can make
-        // check all the moves if that puts the king in check
-        // if it does removes the move
-        // if valid moves is empty return true else return false
 
     }
 
@@ -229,7 +226,6 @@ public class ChessGame {
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
-        WHITE,
-        BLACK
+        WHITE, BLACK
     }
 }
