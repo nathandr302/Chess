@@ -57,12 +57,11 @@ public class ChessGame {
         Collection<ChessMove> vMoves = new HashSet<>();
         Collection<ChessMove> moves = gameBoard.getPiece(startPosition).pieceMoves(gameBoard, startPosition);
 
-
         for (ChessMove move : moves) {
             ChessBoard tmpBoard = new ChessBoard(gameBoard);
             gameBoard.addPiece(move.getEndPosition(), gameBoard.getPiece(startPosition));
             gameBoard.removePiece(move.getStartPosition());
-            if (!(isInCheck(gameBoard.getPiece(move.getEndPosition()).getTeamColor()))) {
+            if (!isInCheck(gameBoard.getPiece(move.getEndPosition()).getTeamColor())) {
                 vMoves.add(move);
 
             }
@@ -174,7 +173,35 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        findKing(teamColor);
+
+        if (!(isInCheck(teamColor))) {
+            return false;
+        }
+        Collection<ChessMove> possibleMoves;
+        Rules rules = new Rules();
+        if (teamColor == WHITE) {
+            possibleMoves = rules.pieceRule(KING).moves(gameBoard, whiteKingPos);
+        } else {
+            possibleMoves = rules.pieceRule(KING).moves(gameBoard, whiteKingPos);
+        }
+
+        Collection<ChessMove> moveToRemove = new HashSet<>();
+        for (ChessMove move : possibleMoves) {
+            ChessBoard tmpBoard = new ChessBoard(gameBoard);
+            ChessPosition start = move.getStartPosition();
+            ChessPosition end = move.getEndPosition();
+            gameBoard.addPiece(start, gameBoard.getPiece(end));
+            gameBoard.removePiece(start);
+            if (isInCheck(teamColor)) {
+                moveToRemove.add(move);
+            }
+            gameBoard = new ChessBoard(tmpBoard);
+        }
+        for (ChessMove move : moveToRemove) {
+            possibleMoves.remove(move);
+        }
+        return possibleMoves.isEmpty();
 
 
     }
@@ -214,12 +241,12 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) o;
-        return Objects.equals(gameBoard, chessGame.gameBoard);
+        return Objects.equals(whiteKingPos, chessGame.whiteKingPos) && Objects.equals(blackKingPos, chessGame.blackKingPos) && Objects.equals(gameBoard, chessGame.gameBoard) && currentTeam == chessGame.currentTeam;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(gameBoard);
+        return Objects.hash(whiteKingPos, blackKingPos, gameBoard, currentTeam);
     }
 
     /**

@@ -25,7 +25,7 @@ public class ChessBoard {
     }
 
     public ChessBoard(ChessBoard other) {
-        this.Board = other.Board;
+        this.Board = new ChessPiece[8][8];
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 this.Board[row][col] = other.Board[row][col];
