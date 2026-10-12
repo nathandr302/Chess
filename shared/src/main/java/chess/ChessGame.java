@@ -16,8 +16,8 @@ import static chess.ChessPiece.PieceType.KING;
  */
 public class ChessGame {
 
-    private ChessPosition whiteKing = new ChessPosition(1, 5);
-    private ChessPosition blackKing = new ChessPosition(8, 5);
+    private ChessPosition whiteKingPos = new ChessPosition(1, 5);
+    private ChessPosition blackKingPos = new ChessPosition(8, 5);
     private ChessBoard gameBoard = new ChessBoard();
     private TeamColor currentTeam = WHITE;
 
@@ -82,6 +82,7 @@ public class ChessGame {
         }
         ChessPosition start = move.getStartPosition();
         ChessPiece startPiece = gameBoard.getPiece(start);
+        ChessPiece.PieceType endtype = move.getPromotionPiece();
         if (startPiece == null) {
             throw new InvalidMoveException("Invalid Move: No piece at start position");
         }
@@ -104,6 +105,34 @@ public class ChessGame {
         }
     }
 
+
+    /**
+     * Finds a given teams king and updates its position
+     *
+     * @param teamColor which team to find the king for
+     */
+    private void findKing(TeamColor teamColor) {
+        //scans each row and col for the king
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition tmpPos = new ChessPosition(row, col);
+                if (gameBoard.getPiece(tmpPos) != null) {
+                    if (KING == gameBoard.getPiece(tmpPos).getPieceType()) {
+                        if (gameBoard.getPiece(tmpPos).getTeamColor() == teamColor) {
+                            if (gameBoard.getPiece(tmpPos).getTeamColor() == WHITE) {
+                                whiteKingPos = tmpPos;
+                                return;
+                            } else {
+                                blackKingPos = tmpPos;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -112,27 +141,16 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         // updates the king's position
-        for (int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-                ChessPosition tmpPos = new ChessPosition(row, col);
-                if (gameBoard.getPiece(tmpPos) != null) {
-                    if (KING == gameBoard.getPiece(tmpPos).getPieceType()) {
-                        if (gameBoard.getPiece(tmpPos).getTeamColor() == WHITE) {
-                            whiteKing = tmpPos;
-                        } else {
-                            blackKing = tmpPos;
-                        }
-                    }
-                }
-            }
-        }
+        findKing(teamColor);
+
+
         Rules rule = new Rules();
         for (ChessPiece.PieceType type : ChessPiece.PieceType.values()) {
             Collection<ChessMove> checkMoves;
             if (teamColor == WHITE) {
-                checkMoves = rule.pieceRule(type).moves(gameBoard, whiteKing);
+                checkMoves = rule.pieceRule(type).moves(gameBoard, whiteKingPos);
             } else {
-                checkMoves = rule.pieceRule(type).moves(gameBoard, blackKing);
+                checkMoves = rule.pieceRule(type).moves(gameBoard, blackKingPos);
             }
             for (ChessMove move : checkMoves) {
                 if (gameBoard.getPiece(move.getEndPosition()) != null) {
@@ -143,7 +161,6 @@ public class ChessGame {
                 }
             }
         }
-
         return false;
     }
 
@@ -155,6 +172,14 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         throw new RuntimeException("Not implemented");
+
+        // check if already in check
+        // collection pf possiable moves
+        // get all posiable moves that the king can make
+        // check all the moves if that puts the king in check
+        // if it does removes the move
+        // if valid moves is empty return true else return false
+
     }
 
     /**

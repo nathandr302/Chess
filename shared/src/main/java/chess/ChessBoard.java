@@ -17,14 +17,20 @@ import static chess.ChessPiece.PieceType.*;
  */
 public class ChessBoard {
 
-    ChessPiece[][] Board = new ChessPiece[8][8];
+    ChessPiece[][] Board;
 
     public ChessBoard() {
+        Board = new ChessPiece[8][8];
 
     }
 
     public ChessBoard(ChessBoard other) {
         this.Board = other.Board;
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                this.Board[row][col] = other.Board[row][col];
+            }
+        }
     }
 
     /**

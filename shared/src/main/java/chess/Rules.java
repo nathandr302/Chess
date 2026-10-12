@@ -16,6 +16,13 @@ public class Rules {
         rules.put(ROOK, new RookMovementRule());
     }
 
+    @Override
+    public String toString() {
+        return "Rules{" +
+                "rules=" + rules +
+                '}';
+    }
+
     public MovementRule pieceRule(ChessPiece.PieceType type) {
         return rules.get(type);
     }
