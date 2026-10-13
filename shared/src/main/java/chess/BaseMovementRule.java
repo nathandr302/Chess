@@ -21,10 +21,9 @@ public abstract class BaseMovementRule implements MovementRule {
             ChessPosition newPosition = new ChessPosition(newRow, newCol);
             ChessPiece newPiece = board.getPiece(newPosition);
             if (newPiece != null) {
-                if (currentPiece.getTeamColor() == newPiece.getTeamColor()) {
-                    break;
+                if (currentPiece != null && currentPiece.getTeamColor() != newPiece.getTeamColor()) {
+                    moves.add(new ChessMove(position, newPosition, null));
                 }
-                moves.add(new ChessMove(position, newPosition, null));
                 break;
             }
 

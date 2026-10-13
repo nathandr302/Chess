@@ -19,54 +19,56 @@ public class PawnMovementRule extends BaseMovementRule {
 
         ChessPiece piece = board.getPiece(position);
 
-        if (piece.getTeamColor() == WHITE) {
-            startRow = 2;
-            direction = 1;
-            promoRow = 8;
-        } else {
-            startRow = 7;
-            direction = -1;
-            promoRow = 1;
-        }
-        int currentRow = position.getRow();
-        int currentCol = position.getColumn();
+        if (piece != null) {
+            if (piece.getTeamColor() == WHITE) {
+                startRow = 2;
+                direction = 1;
+                promoRow = 8;
+            } else {
+                startRow = 7;
+                direction = -1;
+                promoRow = 1;
+            }
+            int currentRow = position.getRow();
+            int currentCol = position.getColumn();
 
-        if ((direction == 1 && currentRow < 8) || (direction == -1 && currentRow > 1)) {
-            ChessPosition newPosition = new ChessPosition(currentRow + direction, currentCol);
-            ChessPiece newPiece = board.getPiece(newPosition);
-            if (newPiece == null) {
-                if (currentRow == startRow) {
-                    ChessPosition doubleFront = new ChessPosition(currentRow + (2 * direction), currentCol);
-                    var doublePiece = board.getPiece(doubleFront);
-                    if (doublePiece == null) {
-                        moves.add(new ChessMove(position, doubleFront, null));
+            if ((direction == 1 && currentRow < 8) || (direction == -1 && currentRow > 1)) {
+                ChessPosition newPosition = new ChessPosition(currentRow + direction, currentCol);
+                ChessPiece newPiece = board.getPiece(newPosition);
+                if (newPiece == null) {
+                    if (currentRow == startRow) {
+                        ChessPosition doubleFront = new ChessPosition(currentRow + (2 * direction), currentCol);
+                        var doublePiece = board.getPiece(doubleFront);
+                        if (doublePiece == null) {
+                            moves.add(new ChessMove(position, doubleFront, null));
+                        }
+                    }
+                    pawnHelper(position, newPosition, moves, promoRow);
+                }
+                // diag col - 1
+                if (currentCol - 1 >= 1) {
+                    int newRow = currentRow + direction;
+                    int newcol = currentCol - 1;
+                    ChessPosition diag = new ChessPosition(newRow, newcol);
+                    ChessPiece diagPiece = board.getPiece(diag);
+
+                    if (diagPiece != null) {
+                        if (board.getPiece(diag).getTeamColor() != piece.getTeamColor()) {
+                            pawnHelper(position, diag, moves, promoRow);
+                        }
                     }
                 }
-                pawnHelper(position, newPosition, moves, promoRow);
-            }
-            // diag col - 1
-            if (currentCol - 1 >= 1) {
-                int newRow = currentRow + direction;
-                int newcol = currentCol - 1;
-                ChessPosition diag = new ChessPosition(newRow, newcol);
-                ChessPiece diagPiece = board.getPiece(diag);
+                // diag col + 1
+                if (currentCol + 1 <= 8) {
+                    int newRow = currentRow + direction;
+                    int newcol = currentCol + 1;
+                    ChessPosition diag = new ChessPosition(newRow, newcol);
+                    ChessPiece diagPiece = board.getPiece(diag);
 
-                if (diagPiece != null) {
-                    if (board.getPiece(diag).getTeamColor() != piece.getTeamColor()) {
-                        pawnHelper(position, diag, moves, promoRow);
-                    }
-                }
-            }
-            // diag col + 1
-            if (currentCol + 1 <= 8) {
-                int newRow = currentRow + direction;
-                int newcol = currentCol + 1;
-                ChessPosition diag = new ChessPosition(newRow, newcol);
-                ChessPiece diagPiece = board.getPiece(diag);
-
-                if (diagPiece != null) {
-                    if (board.getPiece(diag).getTeamColor() != piece.getTeamColor()) {
-                        pawnHelper(position, diag, moves, promoRow);
+                    if (diagPiece != null) {
+                        if (board.getPiece(diag).getTeamColor() != piece.getTeamColor()) {
+                            pawnHelper(position, diag, moves, promoRow);
+                        }
                     }
                 }
             }
