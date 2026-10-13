@@ -206,6 +206,32 @@ public class ChessGame {
 
     }
 
+    private boolean teamSave(TeamColor teamColor) {
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = gameBoard.getPiece(pos);
+                if ((piece == null) || (piece.getTeamColor() != teamColor) || (piece.getPieceType() == KING)) {
+                    continue;
+                }
+                Collection<ChessMove> checkMoves = piece.pieceMoves(gameBoard, pos);
+                Collection<ChessMove> canMoves = new HashSet<>();
+                for (ChessMove move : checkMoves) {
+                    ChessBoard tmpBoard = new ChessBoard(gameBoard);
+                    gameBoard.addPiece(move.getStartPosition(), piece);
+                    if (!(isInCheck(currentTeam))) {
+                        canMoves.add(move);
+                    }
+                    gameBoard = new ChessBoard(tmpBoard);
+                }
+                if (!(canMoves.isEmpty())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves while not in check.
@@ -214,7 +240,23 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)) {
+            return false;
+        }
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition pos = new ChessPosition(row, col);
+                ChessPiece piece = gameBoard.getPiece(pos);
+                if ((piece == null) || (piece.getTeamColor() != teamColor)) {
+                    continue;
+                }
+                Collection<ChessMove> vMoves = validMoves(pos);
+                if (!(vMoves.isEmpty())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
