@@ -180,62 +180,22 @@ public class ChessGame {
             return false;
         }
 
-        Collection<ChessMove> possibleMoves;
-        Rules rules = new Rules();
-        if (teamColor == BLACK) {
-            possibleMoves = rules.pieceRule(KING).moves(gameBoard, blackKingPos);
-        } else {
-            possibleMoves = rules.pieceRule(KING).moves(gameBoard, whiteKingPos);
-        }
-
-        Collection<ChessMove> moveToRemove = new HashSet<>();
-        for (ChessMove move : possibleMoves) {
-            ChessBoard tmpBoard = new ChessBoard(gameBoard);
-
-            ChessPosition start = move.getStartPosition();
-            ChessPosition end = move.getEndPosition();
-
-            gameBoard.addPiece(start, gameBoard.getPiece(end));
-            gameBoard.removePiece(start);
-            if (isInCheck(teamColor)) {
-                moveToRemove.add(move);
-            }
-            gameBoard = new ChessBoard(tmpBoard);
-        }
-        for (ChessMove move : moveToRemove) {
-            possibleMoves.remove(move);
-        }
-        if (!(possibleMoves.isEmpty())) {
-            return false;
-        }
-        return teamSave(teamColor);
-    }
-
-    private boolean teamSave(TeamColor teamColor) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition pos = new ChessPosition(row, col);
                 ChessPiece piece = gameBoard.getPiece(pos);
-                if ((piece == null) || (piece.getTeamColor() != teamColor) || (piece.getPieceType() == KING)) {
-                    continue;
-                }
-                Collection<ChessMove> checkMoves = piece.pieceMoves(gameBoard, pos);
-                Collection<ChessMove> canMoves = new HashSet<>();
-                for (ChessMove move : checkMoves) {
-                    ChessBoard tmpBoard = new ChessBoard(gameBoard);
-                    gameBoard.addPiece(move.getStartPosition(), piece);
-                    if (!(isInCheck(currentTeam))) {
-                        canMoves.add(move);
+
+                if (piece != null && piece.getTeamColor() == teamColor) {
+                    Collection<ChessMove> vMoves = validMoves(pos);
+                    if (vMoves != null && !(vMoves.isEmpty())) {
+                        return false;
                     }
-                    gameBoard = new ChessBoard(tmpBoard);
-                }
-                if (!(canMoves.isEmpty())) {
-                    return false;
                 }
             }
         }
         return true;
     }
+
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
