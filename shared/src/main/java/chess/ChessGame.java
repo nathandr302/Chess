@@ -229,7 +229,7 @@ public class ChessGame {
                 }
             }
         }
-        return true;
+        return teamSave(teamColor);
     }
 
     /**
