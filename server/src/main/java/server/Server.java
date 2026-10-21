@@ -3,15 +3,26 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import model.AuthData;
+import model.GameData;
+import model.UserData;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.Map;
 
 public class Server {
 
     private final Javalin javalin;
+    private HashSet<UserData> users = new HashSet<>();
+    private HashSet<GameData> games = new HashSet<>();
+    private HashSet<AuthData> auths = new HashSet<>();
 
     public Server() {
+
+
+
+
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         // Register your endpoints and exception handlers here.
