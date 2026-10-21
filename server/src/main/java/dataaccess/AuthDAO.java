@@ -1,16 +1,12 @@
 package dataaccess;
 
-public class AuthDAO {
+import model.AuthData;
 
-    public Boolean createAuth() {
-    }
+public interface AuthDAO {
+    AuthData createAuth() throws DataAccessException;
 
-    public String readAuth() {
-    }
+    AuthData getAuth() throws DataAccessException;
 
-    public String updateAuth() {
-    }
+    boolean deleteAuth() throws DataAccessException;
 
-    public Boolean deleteAuth() {
-    }
 }

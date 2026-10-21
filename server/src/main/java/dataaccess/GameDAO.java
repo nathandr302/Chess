@@ -1,17 +1,21 @@
 package dataaccess;
 
-public class GameDAO {
 
-    public Boolean createGame() {
-    }
+import model.GameData;
 
-    public String readGame() {
-    }
+import java.util.HashSet;
 
-    public String updateGame() {
-    }
+public interface GameDAO {
+    void clearGame() throws DataAccessException;
 
-    public Boolean deleteGame() {
-    }
+    int createGame(String gameName) throws DataAccessException;
+
+    void joinGame(int gameID, String playerColor) throws DataAccessException;
+
+    HashSet<GameData> listGame() throws DataAccessException;
+
+    GameData getGame(int gameID) throws DataAccessException;
+
+    void updateGame(int gameID, String game) throws DataAccessException;
 
 }
