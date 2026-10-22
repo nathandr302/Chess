@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import dataaccess.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import model.UserData;
 import org.jetbrains.annotations.NotNull;
 import service.Service;
 
@@ -26,19 +25,19 @@ public class Server {
         // Clears the database. Removes all users, games, and authTokens.
         javalin.delete("/db", this::clearDB);
 
-        // Register a new user.
-        javalin.post("/user", this::registerUser);
-        // Logs in an existing user (returns a new authToken).
-        javalin.post("/session", this::loginUser);
-        // Logs out the user represented by the authToken.
-        javalin.post("/session", this::logOutUser);
-        // Gives a list of all games.
-        javalin.get("/game", this::listGames);
-        // Creates a new game.
-        javalin.post("/session", this::creategame);
-        // Join game
-        javalin.put("/session", this::joinGame);
-        // Verifies that the specified game exists and adds the caller as the requested color to the game.
+//        // Register a new user.
+//        javalin.post("/user", this::registerUser);
+//        // Logs in an existing user (returns a new authToken).
+//        javalin.post("/session", this::loginUser);
+//        // Logs out the user represented by the authToken.
+//        javalin.post("/session", this::logOutUser);
+//        // Gives a list of all games.
+//        javalin.get("/game", this::listGames);
+//        // Creates a new game.
+//        javalin.post("/session", this::creategame);
+//        // Join game
+//        javalin.put("/session", this::joinGame);
+//        // Verifies that the specified game exists and adds the caller as the requested color to the game.
 
 
     }
@@ -51,26 +50,26 @@ public class Server {
             ctx.status(200);
             ctx.json("{}");
         } catch (DataAccessException Error) {
-
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
             ctx.status(500);
-
-            ctx.result(new Gson().toJson());
-
+            ctx.result(json);
         }
 
     }
 
     // Register a new user.
-    public void registerUser(@NotNull Context ctx) throws DataAccessException {
-        UserData user = new Gson().fromJson(ctx.body(), UserData.class);
-        service.registerUser(user);
-        ctx.result(new Gson().toJson(user));
-    }
-
-    public void listGames(@NotNull Context ctx) throws DataAccessException {
-
-        ctx.result(service.listGames().toString());
-    }
+//    public void registerUser(@NotNull Context ctx) throws DataAccessException {
+//        UserData user = new Gson().fromJson(ctx.body(), UserData.class);
+//        service.registerUser(user);
+//        ctx.result(new Gson().toJson(user));
+//    }
+//
+//    public void listGames(@NotNull Context ctx) throws DataAccessException {
+//
+//        ctx.result(service.listGames().toString());
+//    }
 
 
     public int run(int desiredPort) {
