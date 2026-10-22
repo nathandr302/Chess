@@ -1,70 +1,58 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import model.AuthData;
-import model.GameData;
 import model.UserData;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashSet;
-import java.util.Map;
+import service.Service;
 
 public class Server {
 
     private final Javalin javalin;
-    private HashSet<UserData> users = new HashSet<>();
-    private HashSet<GameData> games = new HashSet<>();
-    private HashSet<AuthData> auths = new HashSet<>();
+    private final UserDAO usersDAO = new MemoryUserDAO();
+    private final GameDAO gamesDAO = new MemoryGameDAO();
+    private final AuthDAO authsDAO = new MemoryAuthDAO();
+    private final Service service = new Service(usersDAO, gamesDAO, authsDAO);
+
 
     public Server() {
-
-
-
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         // Register your endpoints and exception handlers here.
 
         // Clears the database. Removes all users, games, and authTokens.
-        javalin.delete("/db", Server::clearDB);
+        javalin.delete("/db", this::clearDB);
 
         // Register a new user.
-        javalin.port("/user", Server::);
+        javalin.post("/user", this::registerUser);
         // Logs in an existing user (returns a new authToken).
-        javalin.port("/session", Server::);
+        javalin.post("/session", this::loginUser);
         // Logs out the user represented by the authToken.
-        javalin.port("/session", Server::);
+        javalin.post("/session", this::logOutUser);
         // Gives a list of all games.
-        javalin.get("/game", Server::);
+        javalin.get("/game", this::listGames);
         // Creates a new game.
-        javalin.post("/session", Server);
+        javalin.post("/session", this::creategame);
         // Join game
-        javalin.put("/session",);
+        javalin.put("/session", this::joinGame);
         // Verifies that the specified game exists and adds the caller as the requested color to the game.
-        
+
 
     }
 
     // Clears the database. Removes all users, games, and authTokens.
-    private static void clearDB(@NotNull Context ctx) {
-        var r = Map.of();
-        var json = new Gson();
-        ctx.json(json.toJson(r));
+    public void clearDB(@NotNull Context ctx) throws DataAccessException {
+        service.clear();
     }
+
     // Register a new user.
-    private static void userRegister(@NotNull Context ctx){}
-    // Logs in an existing user (returns a new authToken).
-    private static void userLogin(@NotNull Context ctx){}
-    // Logs out the user represented by the authToken.
-    private static void userLogout(@NotNull Context ctx){}
-    // Gives a list of all games.
-    private static void listGames(@NotNull Context ctx){}
-    // Creates a new game.
-    private static void createGame(@NotNull Context ctx){}
-    // Verifies that the specified game exists and adds the caller as the requested color to the game.
-    private static void joinGame(@NotNull Context ctx){}
+    public void registerUser(@NotNull Context ctx, String username, String password, String email) throws DataAccessException {
+        UserData user = new Gson().fromJson(ctx.body(), UserData.class);
+        service.registerUser(user);
+    }
 
 
     public int run(int desiredPort) {
