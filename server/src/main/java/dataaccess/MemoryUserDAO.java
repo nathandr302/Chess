@@ -17,11 +17,12 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public void createUser(UserData user) throws DataAccessException {
+    public String createUser(UserData user) throws DataAccessException {
         if ((user.username() == null) || (user.password() == null) || (user.email() == null)) {
             throw new DataAccessException("Username, password, or email is null");
         }
         userDataMap.put(user.username(), user);
+        return user.username();
     }
 
     @Override

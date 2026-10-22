@@ -43,15 +43,33 @@ public class Server {
 
     }
 
+
     // Clears the database. Removes all users, games, and authTokens.
-    public void clearDB(@NotNull Context ctx) throws DataAccessException {
-        service.clear();
+    public void clearDB(@NotNull Context ctx) {
+        try {
+            service.clear();
+            ctx.status(200);
+            ctx.json("{}");
+        } catch (DataAccessException Error) {
+
+            ctx.status(500);
+
+            ctx.result(new Gson().toJson());
+
+        }
+
     }
 
     // Register a new user.
-    public void registerUser(@NotNull Context ctx, String username, String password, String email) throws DataAccessException {
+    public void registerUser(@NotNull Context ctx) throws DataAccessException {
         UserData user = new Gson().fromJson(ctx.body(), UserData.class);
         service.registerUser(user);
+        ctx.result(new Gson().toJson(user));
+    }
+
+    public void listGames(@NotNull Context ctx) throws DataAccessException {
+
+        ctx.result(service.listGames().toString());
     }
 
 
@@ -59,6 +77,7 @@ public class Server {
         javalin.start(desiredPort);
         return javalin.port();
     }
+
 
     public void stop() {
         javalin.stop();

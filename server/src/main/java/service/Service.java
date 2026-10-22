@@ -25,7 +25,7 @@ public class Service {
         auths.clear();
     }
 
-    public void registerUser(UserData user) throws DataAccessException {
-        users.createUser(user);
+    public String registerUser(UserData user) throws DataAccessException {
+        return users.createUser(user);
     }
 }
