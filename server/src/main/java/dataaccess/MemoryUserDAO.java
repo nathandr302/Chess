@@ -9,20 +9,11 @@ public class MemoryUserDAO implements UserDAO {
     private final Map<String, UserData> userDataMap = new HashMap<>();
 
     @Override
-    public UserData getUserByUsername(String username) throws DataAccessException {
-        if (username == null) {
-            throw new DataAccessException("Userame is null");
-        }
-        return userDataMap.get(username);
-    }
-
-    @Override
-    public String createUser(UserData user) throws DataAccessException {
+    public void createUser(UserData user) throws DataAccessException {
         if ((user.username() == null) || (user.password() == null) || (user.email() == null)) {
-            throw new DataAccessException("Username, password, or email is null");
+            throw new DataAccessException("\"bad request\"");
         }
         userDataMap.put(user.username(), user);
-        return user.username();
     }
 
     @Override
