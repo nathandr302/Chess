@@ -25,7 +25,6 @@ public class Service {
     }
 
     public AuthData registerUser(UserData user) throws DataAccessException, AlreadyTakenException, BadRequestException {
-
         users.createUser(user);
         return auths.createAuth(user.username());
     }

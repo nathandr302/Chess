@@ -14,9 +14,7 @@ public class MemoryAuthDAO implements AuthDAO {
         if (username == null) {
             throw new BadRequestException("bad request");
         }
-        if ((authDataMap.containsKey(username))) {
-            return authDataMap.get(username);
-        }
+        authDataMap.remove(username);
         AuthData auth = new AuthData(UUID.randomUUID().toString(), username);
         authDataMap.put(username, auth);
         return auth;
