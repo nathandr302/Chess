@@ -1,5 +1,6 @@
 package dataaccess;
 
+import model.AuthData;
 import model.UserData;
 
 import java.util.HashMap;
@@ -10,6 +11,11 @@ public class MemoryUserDAO implements UserDAO {
 
     @Override
     public void login(UserData user) throws BadRequestException, UnauthorizedException, DataAccessException {
+
+    }
+
+    @Override
+    public void logout(AuthData auth) throws UnauthorizedException, DataAccessException {
 
     }
 

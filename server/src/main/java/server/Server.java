@@ -93,27 +93,57 @@ public class Server {
     }
 
     public void loginUser(@NotNull Context ctx) {
-        service.
+        try{
+            service.loginUser();
+            ctx.status(200);
+        } catch (BadRequestException e) {
+            throw new RuntimeException(e);
+        } catch (UnauthorizedException e) {
+            throw new RuntimeException(e);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void logoutUser(@NotNull Context ctx) {
+        try{
+            service.logoutUser();
+            ctx.status(200);
+        } catch (UnauthorizedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void listGames(@NotNull Context ctx) {
+        try{
+            service.listGames();
+            ctx.status(200);
+        } catch (UnauthorizedException e) {
+
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void createGame(@NotNull Context ctx) {
+        try{
+            service.listGames();
+            ctx.status(200);
+        } catch (UnauthorizedException e) {
+            throw new RuntimeException(e);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void joinGame(@NotNull Context ctx) {
+        try{
+            service.joinGame();
+            ctx.status(200);
+        } catch
     }
 
-
-//
-//    public void listGames(@NotNull Context ctx) throws DataAccessException {
-//
-//        ctx.result(service.listGames().toString());
-//    }
 
 
     public int run(int desiredPort) {

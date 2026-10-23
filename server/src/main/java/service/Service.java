@@ -32,15 +32,19 @@ public class Service {
     public void loginUser(UserData user) throws BadRequestException, UnauthorizedException, DataAccessException {
         users.login(user);
     }
-    public void logoutUser(AuthData auth) throws UnauthorizedException DataAccessException {
-        users.logout(user);
+
+    public void logoutUser(AuthData auth) throws UnauthorizedException, DataAccessException {
+        users.logout(auth);
     }
-    public void listGames() throws UnauthorizedException, DataAccessException{
+
+    public void listGames() throws UnauthorizedException, DataAccessException {
         games.list();
     }
-    public void createGame() throws BadRequestException, UnauthorizedException, DataAccessException{
+
+    public void createGame() throws BadRequestException, UnauthorizedException, DataAccessException {
         games.create();
     }
+
     public void joinGame() throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
         games.join();
     }
