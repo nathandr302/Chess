@@ -1,9 +1,7 @@
 package service;
 
-import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
-import dataaccess.GameDAO;
-import dataaccess.UserDAO;
+import dataaccess.*;
+import model.AuthData;
 import model.UserData;
 
 public class Service {
@@ -25,8 +23,26 @@ public class Service {
         auths.clear();
     }
 
-    public void registerUser(UserData user) throws DataAccessException {
+    public void registerUser(UserData user) throws DataAccessException, AlreadyTakenException, BadRequestException {
+
         users.createUser(user);
         auths.createAuth(user.username());
     }
+
+    public void loginUser(UserData user) throws BadRequestException, UnauthorizedException, DataAccessException {
+        users.login(user);
+    }
+    public void logoutUser(AuthData auth) throws UnauthorizedException DataAccessException {
+        users.logout(user);
+    }
+    public void listGames() throws UnauthorizedException, DataAccessException{
+        games.list();
+    }
+    public void createGame() throws BadRequestException, UnauthorizedException, DataAccessException{
+        games.create();
+    }
+    public void joinGame() throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+        games.join();
+    }
+
 }

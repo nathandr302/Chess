@@ -29,18 +29,17 @@ public class Server {
 
         // Register a new user.
         javalin.post("/user", this::registerUser);
-
-//        // Logs in an existing user (returns a new authToken).
-//        javalin.post("/session", this::loginUser);
-//        // Logs out the user represented by the authToken.
-//        javalin.post("/session", this::logOutUser);
-//        // Gives a list of all games.
-//        javalin.get("/game", this::listGames);
-//        // Creates a new game.
-//        javalin.post("/session", this::creategame);
-//        // Join game
-//        javalin.put("/session", this::joinGame);
-//        // Verifies that the specified game exists and adds the caller as the requested color to the game.
+        // Logs in an existing user (returns a new authToken).
+        javalin.post("/session", this::loginUser);
+        // Logs out the user represented by the authToken.
+        javalin.post("/session", this::logoutUser);
+        // Gives a list of all games.
+        javalin.get("/game", this::listGames);
+        // Creates a new game.
+        javalin.post("/session", this::createGame);
+        // Join game
+        javalin.put("/session", this::joinGame);
+        // Verifies that the specified game exists and adds the caller as the requested color to the game.
 
 
     }
@@ -63,7 +62,7 @@ public class Server {
     }
 
     // Register a new user.
-    public void registerUser(@NotNull Context ctx) throws DataAccessException {
+    public void registerUser(@NotNull Context ctx) throws DataAccessException, BadRequestException, AlreadyTakenException {
         UserData user = new Gson().fromJson(ctx.body(), UserData.class);
 
         try {
@@ -71,6 +70,19 @@ public class Server {
             ctx.status(200);
 
 
+        } catch(BadRequestException Error){
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(400);
+            ctx.result(json);
+        }
+        catch (AlreadyTakenException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(403);
+            ctx.result(json);
         } catch (DataAccessException Error) {
             ResultError resultError = new ResultError(Error);
             var serializer = new Gson();
@@ -79,6 +91,24 @@ public class Server {
             ctx.result(json);
         }
     }
+
+    public void loginUser(@NotNull Context ctx) {
+        service.
+    }
+
+    public void logoutUser(@NotNull Context ctx) {
+    }
+
+    public void listGames(@NotNull Context ctx) {
+    }
+
+    public void createGame(@NotNull Context ctx) {
+    }
+
+    public void joinGame(@NotNull Context ctx) {
+    }
+
+
 //
 //    public void listGames(@NotNull Context ctx) throws DataAccessException {
 //

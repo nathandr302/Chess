@@ -1,11 +1,11 @@
 package server;
 
-import dataaccess.DataAccessException;
+import dataaccess.AlreadyTakenException;
 
 public class ResultError {
-    private  String message;
+    private final String message;
 
-    public ResultError(DataAccessException error){
+    public ResultError(AlreadyTakenException error) {
         this.message = "Error" + error.getMessage();
     }
 }

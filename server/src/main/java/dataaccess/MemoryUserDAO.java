@@ -9,9 +9,17 @@ public class MemoryUserDAO implements UserDAO {
     private final Map<String, UserData> userDataMap = new HashMap<>();
 
     @Override
-    public void createUser(UserData user) throws DataAccessException {
+    public void login(UserData user) throws BadRequestException, UnauthorizedException, DataAccessException {
+
+    }
+
+    @Override
+    public void createUser(UserData user) throws DataAccessException, AlreadyTakenException {
         if ((user.username() == null) || (user.password() == null) || (user.email() == null)) {
-            throw new DataAccessException("\"bad request\"");
+            throw new DataAccessException("bad request");
+        }
+        if (userDataMap.containsKey(user.getUsername())) {
+            throw new AlreadyTakenException("already taken");
         }
         userDataMap.put(user.username(), user);
     }
