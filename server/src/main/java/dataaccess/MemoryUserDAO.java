@@ -1,6 +1,5 @@
 package dataaccess;
 
-import model.AuthData;
 import model.LoginData;
 import model.UserData;
 
@@ -21,11 +20,6 @@ public class MemoryUserDAO implements UserDAO {
         if (!userDataMap.get(user.getUsername()).getPassword().equals(user.getPassword())) {
             throw new UnauthorizedException("unauthorized");
         }
-
-    }
-
-    @Override
-    public void logout(AuthData auth) throws UnauthorizedException, DataAccessException {
 
     }
 

@@ -33,8 +33,8 @@ public class Server {
         javalin.post("/user", this::registerUser);
         // Logs in an existing user (returns a new authToken).
         javalin.post("/session", this::loginUser);
-//        // Logs out the user represented by the authToken.
-//        javalin.post("/session", this::logoutUser);
+        // Logs out the user represented by the authToken.
+        javalin.delete("/session", this::logoutUser);
 //        // Gives a list of all games.
 //        javalin.get("/game", this::listGames);
 //        // Creates a new game.
@@ -125,25 +125,28 @@ public class Server {
             ctx.result(json);
         }
     }
-//
-//    public void logoutUser(@NotNull Context ctx) {
-//        try {
-//            service.logoutUser();
-//            ctx.status(200);
-//        } catch (UnauthorizedException Error) {
-//            ResultError resultError = new ResultError(Error);
-//            var serializer = new Gson();
-//            var json = serializer.toJson(resultError);
-//            ctx.status(400);
-//            ctx.result(json);
-//        } catch (DataAccessException Error) {
-//            ResultError resultError = new ResultError(Error);
-//            var serializer = new Gson();
-//            var json = serializer.toJson(resultError);
-//            ctx.status(500);
-//            ctx.result(json);
-//        }
-//    }
+
+    public void logoutUser(@NotNull Context ctx) {
+        String logoutUser = ctx.header("authorization");
+
+        try {
+            service.logoutUser(logoutUser);
+            ctx.status(200);
+            ctx.json("{}");
+        } catch (UnauthorizedException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(401);
+            ctx.result(json);
+        } catch (DataAccessException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(500);
+            ctx.result(json);
+        }
+    }
 //
 //    public void listGames(@NotNull Context ctx) {
 //        try {

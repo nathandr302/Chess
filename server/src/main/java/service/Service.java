@@ -36,8 +36,8 @@ public class Service {
 
     }
 
-    public void logoutUser(AuthData auth) throws UnauthorizedException, DataAccessException {
-        users.logout(auth);
+    public void logoutUser(String auth) throws UnauthorizedException, DataAccessException {
+        auths.deleteAuth(auth);
     }
 
     public void listGames() throws BadRequestException, UnauthorizedException, DataAccessException {
