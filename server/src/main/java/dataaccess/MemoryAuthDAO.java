@@ -18,14 +18,10 @@ public class MemoryAuthDAO implements AuthDAO {
         }
     }
 
-    @Override
-    public void deleteAuth(String authToken) throws DataAccessException, UnauthorizedException {
-
-    }
 
     @Override
     public void deleteAuth(AuthData auth) throws DataAccessException, UnauthorizedException {
-        if (!(authDataMap.containsKey(auth.username())){
+        if (!(authDataMap.containsKey(auth.username()))) {
             throw new DataAccessException("User's Authtoken not found.");
 
         }

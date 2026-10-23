@@ -3,7 +3,7 @@ package dataaccess;
 
 public interface GameDAO {
 
-    void list() throws UnauthorizedException, DataAccessException;
+    void list() throws BadRequestException, UnauthorizedException, DataAccessException;
 
     void create() throws BadRequestException, UnauthorizedException, DataAccessException;
 

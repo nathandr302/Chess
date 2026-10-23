@@ -20,9 +20,12 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public void createUser(UserData user) throws DataAccessException, AlreadyTakenException {
-        if ((user.username() == null) || (user.password() == null) || (user.email() == null)) {
-            throw new DataAccessException("bad request");
+    public void createUser(UserData user) throws BadRequestException, DataAccessException, AlreadyTakenException {
+        if ((user.getUsername() == null) ||
+                (user.getEmail() == null) ||
+                (user.getPassword() == null)) {
+
+            throw new BadRequestException("bad request");
         }
         if (userDataMap.containsKey(user.getUsername())) {
             throw new AlreadyTakenException("already taken");

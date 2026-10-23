@@ -37,7 +37,7 @@ public class Service {
         users.logout(auth);
     }
 
-    public void listGames() throws UnauthorizedException, DataAccessException {
+    public void listGames() throws BadRequestException, UnauthorizedException, DataAccessException {
         games.list();
     }
 
