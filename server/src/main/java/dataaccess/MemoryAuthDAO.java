@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.AuthData;
+import model.CreateGameData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,19 @@ public class MemoryAuthDAO implements AuthDAO {
         AuthData auth = new AuthData(UUID.randomUUID().toString(), username);
         authDataMap.put(username, auth);
         return auth;
+    }
+
+    @Override
+    public void checkAuth(CreateGameData cGameData) throws UnauthorizedException, BadRequestException {
+        if (cGameData.authToken() == null) {
+            throw new BadRequestException("bad Request");
+        }
+        for (AuthData auth : authDataMap.values()) {
+            if (auth.authToken().equals(cGameData.authToken())) {
+                return;
+            }
+        }
+        throw new UnauthorizedException("unauthorized");
     }
 
 

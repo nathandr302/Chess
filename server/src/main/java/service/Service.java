@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.*;
 import model.AuthData;
+import model.CreateGameData;
 import model.LoginData;
 import model.UserData;
 
@@ -43,8 +44,9 @@ public class Service {
         games.list();
     }
 
-    public void createGame() throws BadRequestException, UnauthorizedException, DataAccessException {
-        games.create();
+    public int createGame(CreateGameData cGameData) throws BadRequestException, UnauthorizedException, DataAccessException {
+        auths.checkAuth(cGameData);
+        return games.create(cGameData);
     }
 
     public void joinGame() throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {

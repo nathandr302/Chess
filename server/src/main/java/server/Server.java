@@ -5,6 +5,7 @@ import dataaccess.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import model.AuthData;
+import model.CreateGameData;
 import model.LoginData;
 import model.UserData;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,7 @@ public class Server {
 //        // Gives a list of all games.
 //        javalin.get("/game", this::listGames);
         // Creates a new game.
-        javalin.post("/session", this::createGame);
+        javalin.post("/game", this::createGame);
 //        // Join game
 //        javalin.put("/session", this::joinGame);
 //        // Verifies that the specified game exists and adds the caller as the requested color to the game.
@@ -172,9 +173,17 @@ public class Server {
 //    }
 //
     public void createGame(@NotNull Context ctx) {
+        String authString = ctx.header("authorization");
+        String gameName = new Gson().fromJson(ctx.body(), String.class);
+        CreateGameData cGameData = new CreateGameData(authString, gameName);
+
+
         try {
-            service.listGames();
+            int gameID = service.createGame(cGameData);
+            var serializer = new Gson();
+            var json = serializer.toJson(gameID);
             ctx.status(200);
+            ctx.result(json);
         } catch (BadRequestException Error) {
             ResultError resultError = new ResultError(Error);
             var serializer = new Gson();
