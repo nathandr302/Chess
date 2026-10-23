@@ -10,12 +10,16 @@ public class MemoryAuthDAO implements AuthDAO {
     private final Map<String, AuthData> authDataMap = new HashMap<>();
 
     @Override
-    public void createAuth(String username) throws DataAccessException {
-        if (!(authDataMap.containsKey(username))) {
-            authDataMap.put(username, new AuthData(UUID.randomUUID().toString(), username));
-        } else {
-            throw new DataAccessException("\"Error: already taken\"");
+    public AuthData createAuth(String username) throws BadRequestException {
+        if (username == null) {
+            throw new BadRequestException("bad request");
         }
+        if ((authDataMap.containsKey(username))) {
+            return authDataMap.get(username);
+        }
+        AuthData auth = new AuthData(UUID.randomUUID().toString(), username);
+        authDataMap.put(username, auth);
+        return auth;
     }
 
 
@@ -23,7 +27,6 @@ public class MemoryAuthDAO implements AuthDAO {
     public void deleteAuth(AuthData auth) throws DataAccessException, UnauthorizedException {
         if (!(authDataMap.containsKey(auth.username()))) {
             throw new DataAccessException("User's Authtoken not found.");
-
         }
         authDataMap.remove(auth.getUsername());
     }

@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.*;
 import model.AuthData;
+import model.LoginData;
 import model.UserData;
 
 public class Service {
@@ -23,14 +24,16 @@ public class Service {
         auths.clear();
     }
 
-    public void registerUser(UserData user) throws DataAccessException, AlreadyTakenException, BadRequestException {
+    public AuthData registerUser(UserData user) throws DataAccessException, AlreadyTakenException, BadRequestException {
 
         users.createUser(user);
-        auths.createAuth(user.username());
+        return auths.createAuth(user.username());
     }
 
-    public void loginUser(UserData user) throws BadRequestException, UnauthorizedException, DataAccessException {
+    public AuthData loginUser(LoginData user) throws BadRequestException, UnauthorizedException, DataAccessException {
         users.login(user);
+        return auths.createAuth(user.username());
+
     }
 
     public void logoutUser(AuthData auth) throws UnauthorizedException, DataAccessException {

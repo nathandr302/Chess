@@ -5,11 +5,10 @@ import dataaccess.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import model.AuthData;
+import model.LoginData;
 import model.UserData;
 import org.jetbrains.annotations.NotNull;
 import service.Service;
-
-import java.util.UUID;
 
 
 public class Server {
@@ -33,7 +32,7 @@ public class Server {
         // Register a new user.
         javalin.post("/user", this::registerUser);
         // Logs in an existing user (returns a new authToken).
-//        javalin.post("/session", this::loginUser);
+        javalin.post("/session", this::loginUser);
 //        // Logs out the user represented by the authToken.
 //        javalin.post("/session", this::logoutUser);
 //        // Gives a list of all games.
@@ -67,12 +66,14 @@ public class Server {
     // Register a new user.
     public void registerUser(@NotNull Context ctx) {
         UserData user = new Gson().fromJson(ctx.body(), UserData.class);
-        AuthData auth = new AuthData(UUID.randomUUID().toString(), user.getUsername());
+
 
         try {
-            service.registerUser(user);
+            AuthData auth = service.registerUser(user);
+            var serializer = new Gson();
+            var json = serializer.toJson(auth);
             ctx.status(200);
-
+            ctx.result(json);
 
         } catch (BadRequestException Error) {
             ResultError resultError = new ResultError(Error);
@@ -95,31 +96,35 @@ public class Server {
         }
     }
 
-//    public void loginUser(@NotNull Context ctx) {
-//        UserData user = new Gson().fromJson(ctx.body(), UserData.class);
-//        try {
-//            service.loginUser(user);
-//            ctx.status(200);
-//        } catch (BadRequestException Error) {
-//            ResultError resultError = new ResultError(Error);
-//            var serializer = new Gson();
-//            var json = serializer.toJson(resultError);
-//            ctx.status(400);
-//            ctx.result(json);
-//        } catch (UnauthorizedException Error) {
-//            ResultError resultError = new ResultError(Error);
-//            var serializer = new Gson();
-//            var json = serializer.toJson(resultError);
-//            ctx.status(401);
-//            ctx.result(json);
-//        } catch (DataAccessException Error) {
-//            ResultError resultError = new ResultError(Error);
-//            var serializer = new Gson();
-//            var json = serializer.toJson(resultError);
-//            ctx.status(500);
-//            ctx.result(json);
-//        }
-//    }
+    public void loginUser(@NotNull Context ctx) {
+        LoginData loginUser = new Gson().fromJson(ctx.body(), LoginData.class);
+
+        try {
+            AuthData auth = service.loginUser(loginUser);
+            var serializer = new Gson();
+            var json = serializer.toJson(auth);
+            ctx.status(200);
+            ctx.result(json);
+        } catch (BadRequestException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(400);
+            ctx.result(json);
+        } catch (UnauthorizedException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(401);
+            ctx.result(json);
+        } catch (DataAccessException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(500);
+            ctx.result(json);
+        }
+    }
 //
 //    public void logoutUser(@NotNull Context ctx) {
 //        try {

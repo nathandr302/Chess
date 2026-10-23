@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.AuthData;
+import model.LoginData;
 import model.UserData;
 
 import java.util.HashMap;
@@ -10,7 +11,16 @@ public class MemoryUserDAO implements UserDAO {
     private final Map<String, UserData> userDataMap = new HashMap<>();
 
     @Override
-    public void login(UserData user) throws BadRequestException, UnauthorizedException, DataAccessException {
+    public void login(LoginData user) throws BadRequestException, UnauthorizedException {
+        if ((user.getUsername() == null) || user.getPassword() == null) {
+            throw new BadRequestException("bad request");
+        }
+        if (!(userDataMap.containsKey(user.getUsername()))) {
+            throw new UnauthorizedException("unauthorized");
+        }
+        if (!userDataMap.get(user.getUsername()).getPassword().equals(user.getPassword())) {
+            throw new UnauthorizedException("unauthorized");
+        }
 
     }
 
