@@ -3,6 +3,8 @@ package dataaccess;
 import chess.ChessGame;
 import model.CreateGameData;
 import model.GameData;
+import model.GameListData;
+import model.JoinRequestData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,14 +15,15 @@ public class MemoryGameDAO implements GameDAO {
     int gameID = 1;
 
     @Override
-    public void list() throws UnauthorizedException, DataAccessException {
+    public GameListData list() throws UnauthorizedException, DataAccessException {
+        return new GameListData(gameDataMap.values());
 
     }
 
     @Override
     public int create(CreateGameData cGameData) throws BadRequestException {
         if (cGameData.gameName() == null) {
-            throw new BadRequestException("bad equest");
+            throw new BadRequestException("bad request");
         }
         GameData newGame = new GameData(gameID, null, null, cGameData.gameName(), new ChessGame());
         gameDataMap.put(gameID, newGame);
@@ -29,7 +32,8 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
-    public void join() throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+    public void join(JoinRequestData joinGame) throws BadRequestException, AlreadyTakenException, DataAccessException {
+
 
     }
 

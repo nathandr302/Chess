@@ -1,10 +1,7 @@
 package service;
 
 import dataaccess.*;
-import model.AuthData;
-import model.CreateGameData;
-import model.LoginData;
-import model.UserData;
+import model.*;
 
 public class Service {
 
@@ -40,17 +37,19 @@ public class Service {
         auths.deleteAuth(auth);
     }
 
-    public void listGames() throws BadRequestException, UnauthorizedException, DataAccessException {
-        games.list();
+    public GameListData listGames(String authToken) throws UnauthorizedException, DataAccessException, BadRequestException {
+        auths.checkAuth(authToken);
+        return games.list();
     }
 
     public int createGame(CreateGameData cGameData) throws BadRequestException, UnauthorizedException, DataAccessException {
-        auths.checkAuth(cGameData);
+        auths.checkAuth(cGameData.authToken());
         return games.create(cGameData);
     }
 
-    public void joinGame() throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
-        games.join();
+    public void joinGame(String authToken, JoinRequestData joinData) throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+        auths.checkAuth(authToken);
+        games.join(joinData);
     }
 
 }

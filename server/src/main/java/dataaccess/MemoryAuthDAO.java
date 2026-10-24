@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.AuthData;
-import model.CreateGameData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,12 +21,10 @@ public class MemoryAuthDAO implements AuthDAO {
     }
 
     @Override
-    public void checkAuth(CreateGameData cGameData) throws UnauthorizedException, BadRequestException {
-        if (cGameData.authToken() == null) {
-            throw new BadRequestException("bad Request");
-        }
+    public void checkAuth(String authToken) throws UnauthorizedException  {
+
         for (AuthData auth : authDataMap.values()) {
-            if (auth.authToken().equals(cGameData.authToken())) {
+            if (auth.authToken().equals(authToken)) {
                 return;
             }
         }
