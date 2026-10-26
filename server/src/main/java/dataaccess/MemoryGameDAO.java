@@ -39,7 +39,7 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public void join(String username, JoinRequestData joinData) throws BadRequestException, AlreadyTakenException, DataAccessException {
 
-        if ((joinData.playerColor() == null) ||
+        if (joinData.playerColor() == null || joinData.playerColor().isEmpty() ||
                 (joinData.gameID() < 1)) {
             throw new BadRequestException("bad request");
         }
@@ -61,13 +61,16 @@ public class MemoryGameDAO implements GameDAO {
             } else {
                 throw new AlreadyTakenException("Game player already taken");
             }
-        } else {
+        } else if (joinData.playerColor().equals("WHITE")) {
             if (gameToReplace.whiteUsername() == null) {
                 newGame = new GameData(gameToReplace.gameID(), username, gameToReplace.blackUsername(), gameToReplace.gameName(), gameToReplace.game());
             } else {
                 throw new AlreadyTakenException("Game player already taken");
             }
+        } else {
+            throw new BadRequestException("bad request");
         }
+
 
         gameDataMap.remove(gameToReplace);
         gameDataMap.put(newGame.gameID(), newGame);

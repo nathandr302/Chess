@@ -14,14 +14,14 @@ public class MemoryAuthDAO implements AuthDAO {
         if (username == null) {
             throw new BadRequestException("bad request");
         }
-        authDataMap.remove(username);
+
         AuthData auth = new AuthData(UUID.randomUUID().toString(), username);
         authDataMap.put(username, auth);
         return auth;
     }
 
     @Override
-    public void checkAuth(String authToken) throws UnauthorizedException  {
+    public void checkAuth(String authToken) throws UnauthorizedException {
 
         for (AuthData auth : authDataMap.values()) {
             if (auth.authToken().equals(authToken)) {
