@@ -1,4 +1,4 @@
 package model;
 
-public record JoinRequestData(String playerColer, int gameID) {
+public record JoinRequestData(String playerColor, int gameID) {
 }

@@ -31,6 +31,18 @@ public class MemoryAuthDAO implements AuthDAO {
         throw new UnauthorizedException("unauthorized");
     }
 
+    @Override
+    public String getUserFromAuthToken(String authToken) throws BadRequestException {
+        String returnUsername = null;
+
+        for (AuthData auth : authDataMap.values()) {
+            if (auth.authToken().equals(authToken)) {
+                returnUsername = auth.username();
+            }
+        }
+        return returnUsername;
+    }
+
 
     @Override
     public void deleteAuth(String token) throws UnauthorizedException {

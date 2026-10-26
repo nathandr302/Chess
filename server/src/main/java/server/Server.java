@@ -34,18 +34,16 @@ public class Server {
         // Logs out the user represented by the authToken.
         javalin.delete("/session", this::logoutUser);
         // Gives a list of all games.
-//        javalin.put("/game", this::listGames);
-//        javalin.get("/game", this::listGames);
+        //javalin.put("/game", this::listGames);
+        javalin.get("/game", this::listGames);
         // Creates a new game.
         javalin.post("/game", this::createGame);
         // Join game
-        javalin.put("/session", this::joinGame);
+        javalin.put("/game", this::joinGame);
         // Verifies that the specified game exists and adds the caller as the requested color to the game.
 //
 
     }
-
-
 
 
     // Clears the database. Removes all users, games, and authTokens.
@@ -149,32 +147,31 @@ public class Server {
         }
     }
 
-//    public void listGames(@NotNull Context ctx) {
-//        String authtoken = ctx.header("authorization");
-//
-//        try {
-//            GameListData gameList = service.listGames(authtoken);
-//            var serializer = new Gson();
-//            var json = serializer.toJson(gameList.toString());
-//            ctx.status(200);
-//            ctx.result(json);
-//        } catch (UnauthorizedException Error) {
-//            ResultError resultError = new ResultError(Error);
-//            var serializer = new Gson();
-//            var json = serializer.toJson(resultError);
-//            ctx.status(401);
-//            ctx.result(json);
-//        } catch (DataAccessException Error) {
-//            ResultError resultError = new ResultError(Error);
-//            var serializer = new Gson();
-//            var json = serializer.toJson(resultError);
-//            ctx.status(500);
-//            ctx.result(json);
-//        } catch (BadRequestException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//    }
+    public void listGames(@NotNull Context ctx) {
+        String authtoken = ctx.header("authorization");
+
+        try {
+            GamesListData games = service.listGames(authtoken);
+            var serializer = new Gson();
+            var json = serializer.toJson(games);
+            ctx.status(200);
+            ctx.result(json);
+        } catch (UnauthorizedException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(401);
+            ctx.result(json);
+        } catch (DataAccessException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(500);
+            ctx.result(json);
+        } catch (BadRequestException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void createGame(@NotNull Context ctx) {
         String authString = ctx.header("authorization");
@@ -209,11 +206,11 @@ public class Server {
             ctx.result(json);
         }
     }
-//
+
     public void joinGame(@NotNull Context ctx) {
         try {
             String authtoken = ctx.header("authorization");
-            JoinRequestData  joinData = new Gson().fromJson(ctx.body(), JoinRequestData.class);
+            JoinRequestData joinData = new Gson().fromJson(ctx.body(), JoinRequestData.class);
 
             service.joinGame(authtoken, joinData);
             ctx.status(200);

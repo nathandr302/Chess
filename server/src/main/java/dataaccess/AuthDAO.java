@@ -10,6 +10,8 @@ public interface AuthDAO {
 
     void checkAuth(String authToken) throws UnauthorizedException, BadRequestException;
 
+    String getUserFromAuthToken(String AuthToken) throws BadRequestException;
+
     void deleteAuth(String auth) throws DataAccessException, UnauthorizedException;
 
     void clear() throws DataAccessException;

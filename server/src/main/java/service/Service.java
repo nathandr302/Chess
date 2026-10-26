@@ -37,7 +37,7 @@ public class Service {
         auths.deleteAuth(auth);
     }
 
-    public GameListData listGames(String authToken) throws UnauthorizedException, DataAccessException, BadRequestException {
+    public GamesListData listGames(String authToken) throws UnauthorizedException, DataAccessException, BadRequestException {
         auths.checkAuth(authToken);
         return games.list();
     }
@@ -49,7 +49,8 @@ public class Service {
 
     public void joinGame(String authToken, JoinRequestData joinData) throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
         auths.checkAuth(authToken);
-        games.join(joinData);
+        String username = auths.getUserFromAuthToken(authToken);
+        games.join(username, joinData);
     }
 
 }
