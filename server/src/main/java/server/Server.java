@@ -132,6 +132,12 @@ public class Server {
             service.logoutUser(logoutUser);
             ctx.status(200);
             ctx.json("{}");
+        } catch (BadRequestException Error) {
+            ResultError resultError = new ResultError(Error);
+            var serializer = new Gson();
+            var json = serializer.toJson(resultError);
+            ctx.status(400);
+            ctx.result(json);
         } catch (UnauthorizedException Error) {
             ResultError resultError = new ResultError(Error);
             var serializer = new Gson();

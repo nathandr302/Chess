@@ -12,7 +12,7 @@ public interface AuthDAO {
 
     String getUserFromAuthToken(String AuthToken) throws BadRequestException;
 
-    void deleteAuth(String auth) throws DataAccessException, UnauthorizedException;
+    void deleteAuth(String auth) throws DataAccessException, UnauthorizedException, BadRequestException;
 
     void clear() throws DataAccessException;
 }

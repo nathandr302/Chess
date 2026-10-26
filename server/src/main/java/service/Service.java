@@ -33,7 +33,7 @@ public class Service {
 
     }
 
-    public void logoutUser(String auth) throws UnauthorizedException, DataAccessException {
+    public void logoutUser(String auth) throws UnauthorizedException, DataAccessException, BadRequestException {
         auths.deleteAuth(auth);
     }
 

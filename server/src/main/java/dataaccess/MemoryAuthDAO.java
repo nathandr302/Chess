@@ -14,9 +14,9 @@ public class MemoryAuthDAO implements AuthDAO {
         if (username == null) {
             throw new BadRequestException("bad request");
         }
-
-        AuthData auth = new AuthData(UUID.randomUUID().toString(), username);
-        authDataMap.put(username, auth);
+        String authtoken = UUID.randomUUID().toString();
+        AuthData auth = new AuthData(authtoken, username);
+        authDataMap.put(authtoken, auth);
         return auth;
     }
 
@@ -45,20 +45,18 @@ public class MemoryAuthDAO implements AuthDAO {
 
 
     @Override
-    public void deleteAuth(String token) throws UnauthorizedException {
-        String username = null;
-        boolean isremoved = false;
-        for (AuthData auth : authDataMap.values()) {
-            if (auth.authToken().equals(token)) {
-                username = auth.getUsername();
-                isremoved = true;
-                break;
-            }
+    public void deleteAuth(String token) throws UnauthorizedException, BadRequestException, DataAccessException {
+        if (token == null) {
+            throw new BadRequestException("Bad Request");
         }
-        if (!isremoved) {
-            throw new UnauthorizedException("unauthorized");
+        if (!authDataMap.containsKey(token)) {
+            throw new UnauthorizedException("Unauthorized");
         }
-        authDataMap.remove(username);
+        try {
+            authDataMap.remove(token);
+        } catch (Exception e) {
+            throw new DataAccessException("Server error");
+        }
     }
 
     @Override
