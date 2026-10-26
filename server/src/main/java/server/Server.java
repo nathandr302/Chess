@@ -1,7 +1,10 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.*;
+import dataaccess.AlreadyTakenException;
+import dataaccess.BadRequestException;
+import dataaccess.DataAccessException;
+import dataaccess.UnauthorizedException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import model.*;
@@ -12,10 +15,8 @@ import service.Service;
 public class Server {
 
     private final Javalin javalin;
-    private final UserDAO usersDAO = new MemoryUserDAO();
-    private final GameDAO gamesDAO = new MemoryGameDAO();
-    private final AuthDAO authsDAO = new MemoryAuthDAO();
-    private final Service service = new Service(usersDAO, gamesDAO, authsDAO);
+
+    private final Service service = new Service();
 
 
     public Server() {

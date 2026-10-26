@@ -5,14 +5,12 @@ import model.*;
 
 public class Service {
 
-    private final UserDAO users;
-    private final GameDAO games;
-    private final AuthDAO auths;
+    private final UserDAO users = new MemoryUserDAO();
+    private final GameDAO games = new MemoryGameDAO();
+    private final AuthDAO auths = new MemoryAuthDAO();
 
-    public Service(UserDAO users, GameDAO games, AuthDAO auths) {
-        this.users = users;
-        this.games = games;
-        this.auths = auths;
+    public Service() {
+
     }
 
 
