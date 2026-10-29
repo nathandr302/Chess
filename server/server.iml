@@ -1,16 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/../out/production/server" />
-    <output-test url="file://$MODULE_DIR$/../out/test/server" />
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$">
+    <content url="file://$MODULE_DIR$/..">
+      <sourceFolder url="file://$MODULE_DIR$/../client/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/classes-and-objects/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/classes-and-objects/example-code/ConstructorExample" isTestSource="false" packagePrefix="ConstructorExamples" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/classes-and-objects/example-code/EnumExample" isTestSource="false" packagePrefix="EnumExamples" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/classes-and-objects/example-code/EqualityExample" isTestSource="false" packagePrefix="EqualityExamples" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/classes-and-objects/lecture-files/rodham-files" isTestSource="false" packagePrefix="javaclasses" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/computer-security/example-code/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/concurrency/example-code/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/console-ui/example-code/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/copying-objects/example-code" isTestSource="false" packagePrefix="school" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/db-sql/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/debugging/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/exceptions/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/generics/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/inner-classes/example-code" isTestSource="false" packagePrefix="nestedClassExample" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/io/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/java-fundamentals/example-code/01-simple-classes" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/java-fundamentals/example-code/02-primitive-data-types" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/java-fundamentals/example-code/03-strings" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/java-fundamentals/example-code/04-arrays" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/java-fundamentals/example-code/05-command-line-arguments" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/java-fundamentals/example-code/06-packages-imports" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/java-fundamentals/example-code/07-input-output" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/json/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/lambdas/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/logging/example-code" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/unit-testing/example-code/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/unit-testing/example-code/test" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/web-api/example-code/client-web-api" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/web-api/example-code/old" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/web-api/example-code/server-web-api/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/websocket/example-code/client" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../instruction/websocket/example-code/server" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../petshop/client/src/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../petshop/client/src/test" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../petshop/server/src/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../petshop/server/src/test" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../petshop/shared/src/main" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Tests/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java/service" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java/service" isTestSource="false" packagePrefix="service.Tests" />
+      <sourceFolder url="file://$MODULE_DIR$/../shared/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../shared/src/test/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../starter-code/1-chess-game" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../starter-code/3-web-api" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../starter-code/4-database" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../starter-code/5-pregame" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../starter-code/6-gameplay" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" name="mysql.connector.j" level="project" />
+    <orderEntry type="library" name="mindrot.jbcrypt" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="library" exported="" name="lib" level="project" />
