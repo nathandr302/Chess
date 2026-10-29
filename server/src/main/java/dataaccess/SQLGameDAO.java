@@ -1,15 +1,14 @@
 package dataaccess;
 
 import exception.ResponseException;
+import model.CreateGameData;
+import model.GamesListData;
+import model.JoinRequestData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class SQLGameDAO {
-
-    public SQLGameDAO() throws ResponseException, DataAccessException {
-        configureDatabase();
-    }
+public class SQLGameDAO implements GameDAO {
 
     private final String[] createStatements = {
             """
@@ -27,7 +26,9 @@ public class SQLGameDAO {
             """
     };
 
-
+    public SQLGameDAO() throws ResponseException, DataAccessException {
+        configureDatabase();
+    }
 
     private void configureDatabase() throws ResponseException, DataAccessException {
         DatabaseManager.createDatabase();
@@ -43,4 +44,23 @@ public class SQLGameDAO {
     }
 
 
+    @Override
+    public GamesListData list() throws BadRequestException, UnauthorizedException, DataAccessException {
+        return null;
+    }
+
+    @Override
+    public int create(CreateGameData cGameData) throws BadRequestException, UnauthorizedException, DataAccessException {
+        return 0;
+    }
+
+    @Override
+    public void join(String username, JoinRequestData joinData) throws BadRequestException, AlreadyTakenException, DataAccessException {
+
+    }
+
+    @Override
+    public void clear() throws DataAccessException {
+
+    }
 }

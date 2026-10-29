@@ -1,6 +1,7 @@
 package dataaccess;
 
 import exception.ResponseException;
+import model.AuthData;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,5 +35,30 @@ public class SQLAuthDAO implements AuthDAO {
         } catch (SQLException ex) {
             throw new ResponseException(ResponseException.Code.ServerError, String.format("Unable to configure database: %s", ex.getMessage()));
         }
+    }
+
+    @Override
+    public AuthData createAuth(String username) throws DataAccessException, BadRequestException {
+        return null;
+    }
+
+    @Override
+    public void checkAuth(String authToken) throws UnauthorizedException, BadRequestException {
+
+    }
+
+    @Override
+    public String getUserFromAuthToken(String AuthToken) throws BadRequestException {
+        return "";
+    }
+
+    @Override
+    public void deleteAuth(String auth) throws DataAccessException, UnauthorizedException, BadRequestException {
+
+    }
+
+    @Override
+    public void clear() throws DataAccessException {
+
     }
 }

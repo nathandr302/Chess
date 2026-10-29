@@ -1,15 +1,21 @@
 package service;
 
 import dataaccess.*;
+import exception.ResponseException;
 import model.*;
 
 public class Service {
 
-    private final UserDAO users = new MemoryUserDAO();
-    private final GameDAO games = new MemoryGameDAO();
-    private final AuthDAO auths = new MemoryAuthDAO();
+//    private final UserDAO users = new MemoryUserDAO();
+//    private final GameDAO games = new MemoryGameDAO();
+//    private final AuthDAO auths = new MemoryAuthDAO();
 
-    public Service() {
+
+    private final UserDAO users = new SQLUserDAO();
+    private final GameDAO games = new SQLGameDAO();
+    private final AuthDAO auths = new SQLAuthDAO();
+
+    public Service() throws ResponseException, DataAccessException {
 
     }
 

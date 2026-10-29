@@ -5,6 +5,7 @@ import dataaccess.AlreadyTakenException;
 import dataaccess.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.UnauthorizedException;
+import exception.ResponseException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import model.*;
@@ -19,7 +20,7 @@ public class Server {
     private final Service service = new Service();
 
 
-    public Server() {
+    public Server() throws ResponseException, DataAccessException {
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
