@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -77,7 +78,14 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public AuthData createAuth(String username) throws DataAccessException, BadRequestException {
-        return null;
+        if (username == null) {
+            throw new BadRequestException("bad request");
+        }
+        String authtoken = UUID.randomUUID().toString();
+        AuthData auth = new AuthData(authtoken, username);
+        var statement = "INSERT INTO auth (token, username) VALUES (?, ?)";
+        executeUpdate(statement, authtoken, username);
+        return auth;
     }
 
     @Override
@@ -92,11 +100,14 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public void deleteAuth(String auth) throws DataAccessException, UnauthorizedException, BadRequestException {
-
+        var statement = "DELETE FROM pet WHERE token=?";
+        executeUpdate(statement, auth);
     }
 
     @Override
     public void clear() throws DataAccessException {
+        var statement = "TRUNCATE auths";
+        executeUpdate(statement);
 
     }
 }

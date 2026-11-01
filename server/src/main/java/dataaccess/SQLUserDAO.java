@@ -83,7 +83,8 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void createUser(UserData user) throws BadRequestException, AlreadyTakenException, DataAccessException {
-
+        var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        executeUpdate(statement, user.username(), user.password(), user.email());
     }
 
     @Override
@@ -93,6 +94,8 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void clear() throws DataAccessException {
+        var statement = "TRUNCATE users";
+        executeUpdate(statement);
 
     }
 }
