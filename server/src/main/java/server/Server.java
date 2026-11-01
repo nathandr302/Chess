@@ -16,10 +16,16 @@ public class Server {
 
     private final Javalin javalin;
 
-    private final Service service = new Service();
+    private final Service service;
 
 
     public Server() {
+
+        try {
+            service = new Service();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
@@ -35,7 +41,6 @@ public class Server {
         // Logs out the user represented by the authToken.
         javalin.delete("/session", this::logoutUser);
         // Gives a list of all games.
-        //javalin.put("/game", this::listGames);
         javalin.get("/game", this::listGames);
         // Creates a new game.
         javalin.post("/game", this::createGame);
@@ -45,7 +50,6 @@ public class Server {
 //
 
     }
-
 
     // Clears the database. Removes all users, games, and authTokens.
     public void clearDB(@NotNull Context ctx) {

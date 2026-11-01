@@ -5,12 +5,16 @@ import model.*;
 
 public class Service {
 
-    private final UserDAO users = new MemoryUserDAO();
-    private final GameDAO games = new MemoryGameDAO();
-    private final AuthDAO auths = new MemoryAuthDAO();
+    private final UserDAO users;
+    private final GameDAO games;
+    private final AuthDAO auths;
 
-    public Service() {
+    public Service() throws DataAccessException {
 
+        this.users = new SQLUserDAO();
+        this.games = new SQLGameDAO();
+        this.auths = new SQLAuthDAO();
+        System.out.println("wait.");
     }
 
 

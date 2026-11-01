@@ -17,7 +17,7 @@ public class ServiceTests {
     private static Service service;
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws DataAccessException {
         service = new Service();
     }
 
