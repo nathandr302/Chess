@@ -84,8 +84,16 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public GamesListData list() throws BadRequestException, UnauthorizedException, DataAccessException {
+
         return null;
     }
+
+//    private GameData readGame(ResultSet rs) throws SQLException {
+//        var id = rs.getInt("id");
+//        var json = rs.getString("json");
+//        GameData game = new Gson().fromJson(json, GameData.class);
+//        return GameData.setId(id);
+//    }
 
     @Override
     public int create(CreateGameData cGameData) throws BadRequestException, UnauthorizedException, DataAccessException {

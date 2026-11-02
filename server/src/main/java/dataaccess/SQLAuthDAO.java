@@ -84,7 +84,7 @@ public class SQLAuthDAO implements AuthDAO {
         String authtoken = UUID.randomUUID().toString();
         AuthData auth = new AuthData(authtoken, username);
         var statement = "INSERT INTO auth (token, username) VALUES (?, ?)";
-        executeUpdate(statement, authtoken, username);
+        int i = executeUpdate(statement, authtoken, username);
         return auth;
     }
 
@@ -108,6 +108,5 @@ public class SQLAuthDAO implements AuthDAO {
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE auths";
         executeUpdate(statement);
-
     }
 }

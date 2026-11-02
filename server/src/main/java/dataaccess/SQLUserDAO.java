@@ -83,6 +83,14 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void createUser(UserData user) throws BadRequestException, AlreadyTakenException, DataAccessException {
+        if ((user.getUsername() == null) ||
+            (user.getEmail() == null) ||
+            (user.getPassword() == null)) {
+
+            throw new BadRequestException("bad request");
+        }
+
+
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         executeUpdate(statement, user.username(), user.password(), user.email());
     }
