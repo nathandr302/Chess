@@ -8,7 +8,7 @@ public interface AuthDAO {
 
     AuthData createAuth(String username) throws DataAccessException, BadRequestException;
 
-    void checkAuth(String authToken) throws UnauthorizedException, BadRequestException;
+    void checkAuth(String authToken) throws UnauthorizedException, BadRequestException, DataAccessException;
 
     String getUserFromAuthToken(String AuthToken) throws BadRequestException;
 

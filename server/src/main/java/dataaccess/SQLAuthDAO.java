@@ -89,7 +89,13 @@ public class SQLAuthDAO implements AuthDAO {
     }
 
     @Override
-    public void checkAuth(String authToken) throws UnauthorizedException, BadRequestException {
+    public void checkAuth(String authToken) throws UnauthorizedException, BadRequestException, DataAccessException {
+        try {
+            AuthData newAuth = getAuth(authToken);
+        } catch (DataAccessException e) {
+            throw new UnauthorizedException(e.getMessage());
+        }
+
 
     }
 

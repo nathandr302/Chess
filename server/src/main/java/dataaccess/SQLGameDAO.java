@@ -38,7 +38,7 @@ public class SQLGameDAO implements GameDAO {
         try {
             configureDatabase();
         } catch (DataAccessException e) {
-            throw new DataAccessException(e);
+            throw new DataAccessException(e.getMessage());
         }
     }
 
