@@ -90,10 +90,18 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public void checkAuth(String authToken) throws UnauthorizedException, BadRequestException, DataAccessException {
+
+        AuthData checkAuth = null;
         try {
-            AuthData newAuth = getAuth(authToken);
+            checkAuth = getAuth(authToken);
         } catch (DataAccessException e) {
             throw new UnauthorizedException(e.getMessage());
+        }
+        if (checkAuth == null) {
+            throw new UnauthorizedException("unauthorized");
+        }
+        if (!(checkAuth.authToken().equals(authToken))) {
+            throw new UnauthorizedException("unauthorized");
         }
 
 
@@ -112,6 +120,7 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public void deleteAuth(String auth) throws DataAccessException, UnauthorizedException, BadRequestException {
+        checkAuth(auth);
         var statement = "DELETE FROM auths WHERE token=?";
         executeUpdate(statement, auth);
     }

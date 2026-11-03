@@ -188,8 +188,7 @@ public class Server {
         String authString = ctx.header("authorization");
         String gameName = String.valueOf(new Gson().fromJson(ctx.body(), GameNameData.class));
         CreateGameData cGameData = new CreateGameData(authString, gameName);
-
-
+        
         try {
             int gameID = service.createGame(cGameData);
             GameIDData IDgame = new GameIDData(gameID);
@@ -251,7 +250,6 @@ public class Server {
             ctx.result(json);
         }
     }
-
 
     public int run(int desiredPort) {
         javalin.start(desiredPort);
