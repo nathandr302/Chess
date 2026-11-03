@@ -92,6 +92,9 @@ public class SQLUserDAO implements UserDAO {
         } catch (ResponseException e) {
             throw new RuntimeException(e);
         }
+        if (userToCheck == null) {
+            throw new UnauthorizedException("unauthorized");
+        }
         if (!userToCheck.password().equals(hashPassword)) {
             throw new UnauthorizedException("unauthorized");
         }
