@@ -95,7 +95,13 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public String getUserFromAuthToken(String AuthToken) throws BadRequestException {
-        return "";
+        String username = null;
+        try {
+            username = getAuth(AuthToken).username();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return username;
     }
 
     @Override
@@ -108,5 +114,29 @@ public class SQLAuthDAO implements AuthDAO {
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE auths";
         executeUpdate(statement);
+    }
+
+    private AuthData getAuth(String token) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT token, username FROM auths WHERE token=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, token);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readAuth(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(DataAccessException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return null;
+    }
+
+    private AuthData readAuth(ResultSet rs) throws SQLException {
+        var token = rs.getString("token");
+        var username = rs.getString("username");
+
+        return new AuthData(token, username);
     }
 }

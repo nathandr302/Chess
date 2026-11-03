@@ -79,7 +79,7 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void login(LoginData user) throws BadRequestException, UnauthorizedException, DataAccessException {
-        var statement = "";
+
 
     }
 

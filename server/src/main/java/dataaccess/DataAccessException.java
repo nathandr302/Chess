@@ -11,7 +11,7 @@ import java.util.Map;
 public class DataAccessException extends Exception {
     private Code code = null;
 
-    public DataAccessException(String message) {
+    public DataAccessException(DataAccessException message) {
         super(message);
     }
 

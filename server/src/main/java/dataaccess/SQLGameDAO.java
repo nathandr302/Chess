@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -37,7 +38,7 @@ public class SQLGameDAO implements GameDAO {
         try {
             configureDatabase();
         } catch (DataAccessException e) {
-            throw new RuntimeException(e);
+            throw new DataAccessException(e);
         }
     }
 
@@ -85,10 +86,34 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public GamesListData list() throws BadRequestException, UnauthorizedException, DataAccessException {
-
-        return null;
+        HashSet<GameData> games = new HashSet<>();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        games.add(readGame(rs));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(DataAccessException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+        }
+        GamesListData gameslist = new GamesListData(games);
+        return gameslist;
     }
 
+    private GameData readGame(ResultSet rs) throws SQLException {
+        var gameID = rs.getInt("gameID");
+        var whiteUsername = rs.getString("whiteUsername");
+        var blackUsername = rs.getString("blackUsername");
+        var gameName = rs.getString("gameName");
+        var gameS = rs.getString("game");
+        ChessGame gameCG = new Gson().fromJson(gameS, ChessGame.class);
+
+        GameData game = new GameData(gameID, whiteUsername, blackUsername, gameName, gameCG);
+        return game;
+    }
 
     @Override
     public int create(CreateGameData cGameData) throws BadRequestException, UnauthorizedException, DataAccessException {
@@ -104,7 +129,54 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void join(String username, JoinRequestData joinData) throws BadRequestException, AlreadyTakenException, DataAccessException {
+        if (joinData.playerColor() == null ||
+                joinData.playerColor().isEmpty() ||
+                joinData.gameID() < 1) {
+            throw new BadRequestException("bad request");
+        }
 
+        GameData gameToJoin = getGame(joinData.gameID());
+        if (gameToJoin == null) {
+            throw new BadRequestException("bad request");
+        }
+
+        if (joinData.playerColor().equals("BLACK")) {
+            if (gameToJoin.blackUsername() == null) {
+                var statement = "UPDATE games SET blackUsername=? WHERE gameID =?";
+                executeUpdate(statement, username, gameToJoin.gameID());
+            } else {
+                throw new AlreadyTakenException("Game player already taken");
+            }
+
+        } else if (joinData.playerColor().equals("WHITE")) {
+            if (gameToJoin.whiteUsername() == null) {
+                var statement = "UPDATE games SET whiteUsername=? WHERE gameID=?";
+                executeUpdate(statement, username, gameToJoin.gameID());
+
+            } else {
+                throw new AlreadyTakenException("Game player already taken");
+            }
+        } else {
+            throw new BadRequestException("bad request");
+        }
+
+    }
+
+    private GameData getGame(int gameID) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, gameID);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readGame(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(DataAccessException.Code.ServerError, String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return null;
     }
 
     @Override
