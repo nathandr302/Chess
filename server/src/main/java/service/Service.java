@@ -14,7 +14,6 @@ public class Service {
         this.users = new SQLUserDAO();
         this.games = new SQLGameDAO();
         this.auths = new SQLAuthDAO();
-        System.out.println("wait.");
     }
 
 

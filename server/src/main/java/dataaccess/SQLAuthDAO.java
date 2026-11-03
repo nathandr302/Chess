@@ -83,7 +83,7 @@ public class SQLAuthDAO implements AuthDAO {
         }
         String authtoken = UUID.randomUUID().toString();
         AuthData auth = new AuthData(authtoken, username);
-        var statement = "INSERT INTO auth (token, username) VALUES (?, ?)";
+        var statement = "INSERT INTO auths (token, username) VALUES (?, ?)";
         int i = executeUpdate(statement, authtoken, username);
         return auth;
     }
@@ -100,7 +100,7 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public void deleteAuth(String auth) throws DataAccessException, UnauthorizedException, BadRequestException {
-        var statement = "DELETE FROM pet WHERE token=?";
+        var statement = "DELETE FROM auths WHERE token=?";
         executeUpdate(statement, auth);
     }
 

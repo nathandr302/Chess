@@ -1,5 +1,7 @@
 package dataaccess;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
 import model.CreateGameData;
 import model.GameData;
 import model.GamesListData;
@@ -81,23 +83,23 @@ public class SQLGameDAO implements GameDAO {
         }
     }
 
-
     @Override
     public GamesListData list() throws BadRequestException, UnauthorizedException, DataAccessException {
 
         return null;
     }
 
-//    private GameData readGame(ResultSet rs) throws SQLException {
-//        var id = rs.getInt("id");
-//        var json = rs.getString("json");
-//        GameData game = new Gson().fromJson(json, GameData.class);
-//        return GameData.setId(id);
-//    }
 
     @Override
     public int create(CreateGameData cGameData) throws BadRequestException, UnauthorizedException, DataAccessException {
-        return 0;
+        if (cGameData.gameName() == null) {
+            throw new BadRequestException("bad request");
+        }
+        var statement = "INSERT INTO games (gameName, game) VALUES (?, ?)";
+        String json = new Gson().toJson(new ChessGame());
+        int id = executeUpdate(statement, cGameData.gameName(), json);
+        return id;
+
     }
 
     @Override
@@ -109,6 +111,10 @@ public class SQLGameDAO implements GameDAO {
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE games";
         executeUpdate(statement);
+
+    }
+
+    private void checkuser() throws DataAccessException {
 
     }
 }

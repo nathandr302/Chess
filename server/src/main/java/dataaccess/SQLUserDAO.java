@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.LoginData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -84,15 +85,16 @@ public class SQLUserDAO implements UserDAO {
     @Override
     public void createUser(UserData user) throws BadRequestException, AlreadyTakenException, DataAccessException {
         if ((user.getUsername() == null) ||
-            (user.getEmail() == null) ||
-            (user.getPassword() == null)) {
+                (user.getEmail() == null) ||
+                (user.getPassword() == null)) {
 
             throw new BadRequestException("bad request");
         }
 
 
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-        executeUpdate(statement, user.username(), user.password(), user.email());
+        String hashPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        executeUpdate(statement, user.username(), hashPassword, user.email());
     }
 
     @Override
@@ -106,4 +108,5 @@ public class SQLUserDAO implements UserDAO {
         executeUpdate(statement);
 
     }
+
 }
