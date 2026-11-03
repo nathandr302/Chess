@@ -79,6 +79,7 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void login(LoginData user) throws BadRequestException, UnauthorizedException, DataAccessException {
+        var statement = "";
 
     }
 
@@ -91,10 +92,14 @@ public class SQLUserDAO implements UserDAO {
             throw new BadRequestException("bad request");
         }
 
+        try {
+            var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+            String hashPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+            executeUpdate(statement, user.username(), hashPassword, user.email());
+        } catch (DataAccessException e) {
+            throw new AlreadyTakenException("already taken");
+        }
 
-        var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-        String hashPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
-        executeUpdate(statement, user.username(), hashPassword, user.email());
     }
 
     @Override

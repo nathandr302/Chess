@@ -9,7 +9,6 @@ public interface UserDAO {
 
     void login(LoginData user) throws BadRequestException, UnauthorizedException, DataAccessException;
 
-
     void createUser(UserData user) throws BadRequestException, AlreadyTakenException, DataAccessException;
 
     void deleteUser(String username) throws DataAccessException;
