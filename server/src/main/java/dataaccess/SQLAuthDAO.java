@@ -35,6 +35,7 @@ public class SQLAuthDAO implements AuthDAO {
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
+            conn.setAutoCommit(true);
             try (PreparedStatement ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (int i = 0; i < params.length; i++) {
                     Object param = params[i];
@@ -90,21 +91,13 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public void checkAuth(String authToken) throws UnauthorizedException, BadRequestException, DataAccessException {
-
-        AuthData checkAuth = null;
-        try {
-            checkAuth = getAuth(authToken);
-        } catch (DataAccessException e) {
-            throw new UnauthorizedException(e.getMessage());
-        }
-        if (checkAuth == null) {
+        if (authToken == null) {
             throw new UnauthorizedException("unauthorized");
         }
-        if (!(checkAuth.authToken().equals(authToken))) {
+        AuthData checkAuth = getAuth(authToken);
+        if (checkAuth == null || !checkAuth.authToken().equals(authToken)) {
             throw new UnauthorizedException("unauthorized");
         }
-
-
     }
 
     @Override
