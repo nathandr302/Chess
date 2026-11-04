@@ -85,18 +85,13 @@ public class SQLUserDAO implements UserDAO {
         if ((user.getUsername() == null) || user.getPassword() == null) {
             throw new BadRequestException("bad request");
         }
-        String password = user.password();
-        String hashPassword = BCrypt.hashpw(password, SaltValue);
         UserData userToCheck = null;
         try {
             userToCheck = getUser(user.username());
         } catch (ResponseException e) {
             throw new RuntimeException(e);
         }
-        if (userToCheck == null) {
-            throw new UnauthorizedException("unauthorized");
-        }
-        if (!userToCheck.password().equals(hashPassword)) {
+        if (userToCheck == null || !BCrypt.checkpw(user.password(), userToCheck.password())) {
             throw new UnauthorizedException("unauthorized");
         }
     }
@@ -109,14 +104,16 @@ public class SQLUserDAO implements UserDAO {
 
             throw new BadRequestException("bad request");
         }
-
         try {
-            var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-            String hashPassword = BCrypt.hashpw(user.password(), SaltValue);
-            executeUpdate(statement, user.username(), hashPassword, user.email());
-        } catch (DataAccessException e) {
-            throw new AlreadyTakenException("already taken");
+            if (getUser(user.username()) != null) {
+                throw new AlreadyTakenException("already taken");
+            }
+        } catch (ResponseException e) {
+            throw new RuntimeException(e);
         }
+        var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        String hashPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        executeUpdate(statement, user.username(), hashPassword, user.email());
 
     }
 
