@@ -1,5 +1,6 @@
-package dataaccess;
+package dataaccess.sql;
 
+import dataaccess.*;
 import model.AuthData;
 
 import java.sql.Connection;
@@ -25,12 +26,7 @@ public class SQLAuthDAO implements AuthDAO {
     };
 
     public SQLAuthDAO() throws DataAccessException {
-        try {
-            configureDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-
+        configureDatabase();
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
@@ -75,7 +71,6 @@ public class SQLAuthDAO implements AuthDAO {
             throw new DataAccessException(DataAccessException.Code.ServerError, String.format("Unable to configure database: %s", ex.getMessage()));
         }
     }
-
 
     @Override
     public AuthData createAuth(String username) throws DataAccessException, BadRequestException {

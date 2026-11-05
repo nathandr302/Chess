@@ -1,7 +1,8 @@
-package dataaccess;
+package dataaccess.sql;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import dataaccess.*;
 import model.CreateGameData;
 import model.GameData;
 import model.GamesListData;
@@ -35,11 +36,7 @@ public class SQLGameDAO implements GameDAO {
     };
 
     public SQLGameDAO() throws DataAccessException {
-        try {
-            configureDatabase();
-        } catch (DataAccessException e) {
-            throw new DataAccessException(e.getMessage());
-        }
+        configureDatabase();
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
@@ -184,10 +181,5 @@ public class SQLGameDAO implements GameDAO {
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE games";
         executeUpdate(statement);
-
-    }
-
-    private void checkuser() throws DataAccessException {
-
     }
 }

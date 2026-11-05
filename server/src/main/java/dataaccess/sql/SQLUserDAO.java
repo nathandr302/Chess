@@ -1,5 +1,6 @@
-package dataaccess;
+package dataaccess.sql;
 
+import dataaccess.*;
 import model.LoginData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
@@ -26,15 +27,11 @@ public class SQLUserDAO implements UserDAO {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
-    private final String SaltValue;
+
 
     public SQLUserDAO() throws DataAccessException {
-        try {
-            configureDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-        SaltValue = BCrypt.gensalt();
+        configureDatabase();
+
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
@@ -129,7 +126,7 @@ public class SQLUserDAO implements UserDAO {
 
     }
 
-    public UserData getUser(String username) throws ResponseException, DataAccessException {
+    private UserData getUser(String username) throws ResponseException, DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             var statement = "SELECT username, password, email FROM users WHERE username=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
