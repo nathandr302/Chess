@@ -82,12 +82,7 @@ public class SQLUserDAO implements UserDAO {
         if ((user.getUsername() == null) || user.getPassword() == null) {
             throw new BadRequestException("bad request");
         }
-        UserData userToCheck = null;
-        try {
-            userToCheck = getUser(user.username());
-        } catch (ResponseException e) {
-            throw new RuntimeException(e);
-        }
+        UserData userToCheck = getUser(user.username());
         if (userToCheck == null || !BCrypt.checkpw(user.password(), userToCheck.password())) {
             throw new UnauthorizedException("unauthorized");
         }
@@ -95,23 +90,18 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void createUser(UserData user) throws BadRequestException, AlreadyTakenException, DataAccessException {
-        if ((user.getUsername() == null) ||
-                (user.getEmail() == null) ||
-                (user.getPassword() == null)) {
-
+        if (user.username() == null || user.username().isBlank() ||
+                user.password() == null || user.password().isBlank() ||
+                user.email() == null || user.email().isBlank()) {
             throw new BadRequestException("bad request");
         }
-        try {
-            if (getUser(user.username()) != null) {
-                throw new AlreadyTakenException("already taken");
-            }
-        } catch (ResponseException e) {
-            throw new RuntimeException(e);
+
+        if (getUser(user.username()) != null) {
+            throw new AlreadyTakenException("already taken");
         }
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         String hashPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         executeUpdate(statement, user.username(), hashPassword, user.email());
-
     }
 
     @Override
@@ -126,7 +116,7 @@ public class SQLUserDAO implements UserDAO {
 
     }
 
-    private UserData getUser(String username) throws ResponseException, DataAccessException {
+    private UserData getUser(String username) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             var statement = "SELECT username, password, email FROM users WHERE username=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
