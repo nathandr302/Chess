@@ -91,7 +91,7 @@ public class ChessClient {
 
     public String register(String... params) throws ResponseException {
         if (params.length == 3) {
-            server.postRegisterUser(params[0], params[1], params[3]);
+            server.postRegisterUser(params[0], params[1], params[2]);
             state = State.SIGNEDIN;
             visitorName = params[0];
 
