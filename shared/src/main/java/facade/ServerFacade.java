@@ -2,10 +2,9 @@ package facade;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import model.AuthData;
 import model.GamesListData;
 import model.JoinRequestData;
-import model.LoginData;
-import model.UserData;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -27,20 +26,23 @@ public class ServerFacade {
         handleResponse(response, null);
     }
 
-    public UserData postRegisterUser(String username, String password, String email) throws ResponseException {
+    public AuthData postRegisterUser(String username, String password, String email) throws ResponseException {
         var request = buildRequest("POST", "/user", null, Map.of("username", username, "password", password, "email", email));
         var response = sendRequest(request);
-        return handleResponse(response, UserData.class);
+        return handleResponse(response, AuthData.class);
     }
 
-    public LoginData postLoginUser(String username, String password) throws ResponseException {
+    public AuthData postLoginUser(String username, String password) throws ResponseException {
         var request = buildRequest("POST", "/session", null, Map.of("username", username, "password", password));
         var response = sendRequest(request);
-        return handleResponse(response, LoginData.class);
+        return handleResponse(response, AuthData.class);
     }
 
     public void deleteLogoutUser(String auth) throws ResponseException {
         var request = buildRequest("DELETE", "/session", auth, null);
+        var response = sendRequest(request);
+        handleResponse(response, null);
+
     }
 
     public GamesListData getListGame(String auth) throws ResponseException {
@@ -52,7 +54,7 @@ public class ServerFacade {
     public int postCreateGame(String auth, String gameName) throws ResponseException {
         var request = buildRequest("POST", "/game", auth, Map.of("gameName", gameName));
         var response = sendRequest(request);
-        return handleResponse(response, null);
+        return handleResponse(response, Integer.class);
     }
 
     public JoinRequestData putJoinGame(String auth, String color, int gameID) throws ResponseException {

@@ -4,6 +4,7 @@ package client;
 import chess.ChessBoard;
 import exception.ResponseException;
 import facade.ServerFacade;
+import model.AuthData;
 import model.GamesListData;
 
 import java.util.Arrays;
@@ -13,7 +14,7 @@ import static ui.EscapeSequences.*;
 
 public class ChessClient {
     private final ServerFacade server;
-    private final String auth = null;
+    private String authToken = null;
     private String visitorName = null;
     private State state = State.SIGNEDOUT;
 
@@ -61,6 +62,7 @@ public class ChessClient {
                 return switch (cmd) {
                     case "register" -> register(params);
                     case "login" -> logIn(params);
+                    case "clear" -> clear(params);
                     case "quit" -> "quit";
                     default -> help();
                 };
@@ -82,11 +84,17 @@ public class ChessClient {
         return null;
     }
 
+    public String clear(String... params) throws ResponseException {
+        server.deleteDataBase();
+        return "DB cleared";
+    }
+
     public String logIn(String... params) throws ResponseException {
         if (params.length == 2) {
-            server.postLoginUser(params[0], params[1]);
+            AuthData authData = server.postLoginUser(params[0], params[1]);
             state = State.SIGNEDIN;
-            visitorName = params[0];
+            visitorName = authData.username();
+            authToken = authData.authToken();
 
             return String.format("Logged in as %s", visitorName);
         }
@@ -96,11 +104,12 @@ public class ChessClient {
 
     public String register(String... params) throws ResponseException {
         if (params.length == 3) {
-            server.postRegisterUser(params[0], params[1], params[2]);
+            AuthData authData = server.postRegisterUser(params[0], params[1], params[2]);
             state = State.SIGNEDIN;
-            visitorName = params[0];
+            visitorName = authData.username();
+            authToken = authData.authToken();
 
-            return String.format("Logged in as %s", params[0]);
+            return String.format("Logged in as %s", visitorName);
 
         }
         throw new ResponseException(ResponseException.Code.ClientError, "Expected: <username> <password> <email>");
@@ -110,8 +119,9 @@ public class ChessClient {
     public String logout(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 0) {
-            server.deleteLogoutUser(auth);
+            server.deleteLogoutUser(authToken);
             state = State.SIGNEDOUT;
+            authToken = null;
 
             return String.format("%s logged out", visitorName);
 
@@ -123,7 +133,7 @@ public class ChessClient {
     public String createGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 1) {
-            int gameID = server.postCreateGame(auth, params[0]);
+            int gameID = server.postCreateGame(authToken, params[0]);
             return String.format("Game Created. Name: %s ID: %d", params[0], gameID);
 
         }
@@ -134,7 +144,7 @@ public class ChessClient {
     public String listGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 0) {
-            GamesListData gamelist = server.getListGame(auth);
+            GamesListData gamelist = server.getListGame(authToken);
 
 
         }
