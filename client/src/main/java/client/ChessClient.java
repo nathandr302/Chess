@@ -43,7 +43,12 @@ public class ChessClient {
 
 
     private void printPrompt() {
-        System.out.print("\n" + RESET_TEXT_COLOR + ">>> " + SET_TEXT_COLOR_GREEN);
+        if (state == State.SIGNEDOUT) {
+            System.out.print("\n LOGGED OUT" + RESET_TEXT_COLOR + " >>> " + SET_TEXT_COLOR_GREEN);
+        } else if (state == State.SIGNEDIN) {
+            System.out.print("\n LOGGED IN" + RESET_TEXT_COLOR + " >>> " + SET_TEXT_COLOR_GREEN);
+
+        }
     }
 
 
@@ -161,8 +166,8 @@ public class ChessClient {
             return """
                     register <USERNAME> <PASSWORD> <EMAIL> - to create and account
                     login <USERNAME> <PASSWORD> - to play chess
-                    quit - playing chess
                     help - with possible commands
+                    quit - playing chess
                     """;
         } else if (state == State.SIGNEDIN) {
             return """
@@ -171,8 +176,8 @@ public class ChessClient {
                     join <ID> [WHITE][BLACK] - a game
                     observe <ID> - a game
                     logout - when you are done
-                    quit - playing chess
                     help - with possible commands
+                    quit - playing chess
                     """;
         }
         return null;
