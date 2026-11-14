@@ -2,9 +2,11 @@ package client;
 
 
 import chess.ChessBoard;
+import com.google.gson.Gson;
 import exception.ResponseException;
 import facade.ServerFacade;
 import model.AuthData;
+import model.GameData;
 import model.GamesListData;
 
 import java.util.Arrays;
@@ -145,8 +147,12 @@ public class ChessClient {
         assertSignedIn();
         if (params.length == 0) {
             GamesListData gamelist = server.getListGame(authToken);
-
-
+            var result = new StringBuilder();
+            var gson = new Gson();
+            for (GameData game : gamelist.games()) {
+                result.append(gson.toJson(game)).append('\n');
+            }
+            return result.toString();
         }
         throw new ResponseException(ResponseException.Code.ClientError, "BAD LISTGAME");
 
@@ -192,7 +198,6 @@ public class ChessClient {
         }
         return null;
     }
-
 
     private void assertSignedIn() throws ResponseException {
         if (state == State.SIGNEDOUT) {

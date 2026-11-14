@@ -3,6 +3,7 @@ package facade;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.AuthData;
+import model.GameIDData;
 import model.GamesListData;
 import model.JoinRequestData;
 
@@ -54,7 +55,8 @@ public class ServerFacade {
     public int postCreateGame(String auth, String gameName) throws ResponseException {
         var request = buildRequest("POST", "/game", auth, Map.of("gameName", gameName));
         var response = sendRequest(request);
-        return handleResponse(response, Integer.class);
+        GameIDData gameID = handleResponse(response, GameIDData.class);
+        return gameID.gameID();
     }
 
     public JoinRequestData putJoinGame(String auth, String color, int gameID) throws ResponseException {
