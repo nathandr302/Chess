@@ -2,7 +2,7 @@ package client;
 
 
 import chess.ChessBoard;
-import com.google.gson.Gson;
+import chess.ChessPiece;
 import exception.ResponseException;
 import facade.ServerFacade;
 import model.AuthData;
@@ -16,6 +16,7 @@ import static ui.EscapeSequences.*;
 
 public class ChessClient {
     private final ServerFacade server;
+    GamesListData gamelist = new GamesListData(null);
     private String authToken = null;
     private String visitorName = null;
     private State state = State.SIGNEDOUT;
@@ -47,13 +48,12 @@ public class ChessClient {
 
     private void printPrompt() {
         if (state == State.SIGNEDOUT) {
-            System.out.print("\n LOGGED OUT" + RESET_TEXT_COLOR + " >>> " + SET_TEXT_COLOR_GREEN);
+            System.out.print(RESET_TEXT_COLOR + "\n LOGGED OUT" + " >>> " + SET_TEXT_COLOR_GREEN);
         } else if (state == State.SIGNEDIN) {
-            System.out.print("\n LOGGED IN" + RESET_TEXT_COLOR + " >>> " + SET_TEXT_COLOR_GREEN);
+            System.out.print(RESET_TEXT_COLOR + "\n LOGGED IN" + " >>> " + SET_TEXT_COLOR_GREEN);
 
         }
     }
-
 
     public String eval(String input) {
         try {
@@ -146,11 +146,22 @@ public class ChessClient {
     public String listGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 0) {
-            GamesListData gamelist = server.getListGame(authToken);
+            gamelist = server.getListGame(authToken);
             var result = new StringBuilder();
-            var gson = new Gson();
+
+            int displayIndex = 1;
+
             for (GameData game : gamelist.games()) {
-                result.append(gson.toJson(game)).append('\n');
+                String whitePlayer = game.whiteUsername() != null ? game.whiteUsername() : "Empty";
+                String blackPlayer = game.blackUsername() != null ? game.blackUsername() : "Empty";
+
+                result.append(String.format("%d. %s (White: %s | Black: %s)\n",
+                        displayIndex,
+                        game.gameName(),
+                        whitePlayer,
+                        blackPlayer));
+
+                displayIndex++;
             }
             return result.toString();
         }
@@ -161,6 +172,9 @@ public class ChessClient {
     public String joinGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 2) {
+            server.putJoinGame(authToken, params[1], Integer.parseInt(params[0]));
+
+            return String.format("Game %s joined as %s", params[0], params[1]);
         }
         throw new ResponseException(ResponseException.Code.ClientError, "Expected: <ID> <WHITE|BLACK>");
 
@@ -206,6 +220,26 @@ public class ChessClient {
     }
 
     private String GamePlayUI(ChessBoard board) {
+
+        StringBuilder sBoard;
+        sBoard = new StringBuilder();
+
+        var pieceColor = null;
+        var pieceType = null;
+
+        for (int row = 0; row < 8; row++) {
+            String sRow = "";
+            for (int col = 0; col < 8; col++) {
+                ChessPiece piece = board[row][col];
+                pieceColor = piece.getTeamColor();
+                pieceType = piece.getPieceType();
+
+
+            }
+            sBoard.append(sRow);
+
+        }
+
 
         return "";
     }

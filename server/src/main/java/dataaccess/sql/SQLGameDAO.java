@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Objects;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -138,7 +139,7 @@ public class SQLGameDAO implements GameDAO {
             throw new BadRequestException("bad request");
         }
 
-        if (joinData.playerColor().equals("BLACK")) {
+        if (Objects.equals(joinData.playerColor().toUpperCase(), "BLACK")) {
             if (gameToJoin.blackUsername() == null) {
                 var statement = "UPDATE games SET blackUsername=? WHERE gameID =?";
                 executeUpdate(statement, username, gameToJoin.gameID());
@@ -146,7 +147,7 @@ public class SQLGameDAO implements GameDAO {
                 throw new AlreadyTakenException("Game player already taken");
             }
 
-        } else if (joinData.playerColor().equals("WHITE")) {
+        } else if (Objects.equals(joinData.playerColor().toUpperCase(), "WHITE")) {
             if (gameToJoin.whiteUsername() == null) {
                 var statement = "UPDATE games SET whiteUsername=? WHERE gameID=?";
                 executeUpdate(statement, username, gameToJoin.gameID());

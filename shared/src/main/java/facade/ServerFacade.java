@@ -5,7 +5,6 @@ import exception.ResponseException;
 import model.AuthData;
 import model.GameIDData;
 import model.GamesListData;
-import model.JoinRequestData;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -59,10 +58,10 @@ public class ServerFacade {
         return gameID.gameID();
     }
 
-    public JoinRequestData putJoinGame(String auth, String color, int gameID) throws ResponseException {
-        var request = buildRequest("PUT", "/game", auth, Map.of("color", color, "gameID", gameID));
+    public void putJoinGame(String auth, String color, int gameID) throws ResponseException {
+        var request = buildRequest("PUT", "/game", auth, Map.of("playerColor", color, "gameID", gameID));
         var response = sendRequest(request);
-        return handleResponse(response, JoinRequestData.class);
+        handleResponse(response, null);
 
     }
 
