@@ -2,7 +2,9 @@ package client;
 
 
 import chess.ChessBoard;
+import chess.ChessGame;
 import chess.ChessPiece;
+import chess.ChessPosition;
 import exception.ResponseException;
 import facade.ServerFacade;
 import model.AuthData;
@@ -12,16 +14,17 @@ import model.GamesListData;
 import java.util.Arrays;
 import java.util.Scanner;
 
+
 import static ui.EscapeSequences.*;
 
 public class ChessClient {
     private final ServerFacade server;
-    GamesListData gamelist = new GamesListData(null);
+
     private String authToken = null;
     private String visitorName = null;
     private State state = State.SIGNEDOUT;
 
-    public ChessClient(String serverUrl) throws ResponseException {
+    public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
     }
 
@@ -45,7 +48,6 @@ public class ChessClient {
         System.out.println();
     }
 
-
     private void printPrompt() {
         if (state == State.SIGNEDOUT) {
             System.out.print(RESET_TEXT_COLOR + "\n LOGGED OUT" + " >>> " + SET_TEXT_COLOR_GREEN);
@@ -64,7 +66,7 @@ public class ChessClient {
                 return switch (cmd) {
                     case "register" -> register(params);
                     case "login" -> logIn(params);
-                    case "clear" -> clear(params);
+                    case "clear" -> clear();
                     case "quit" -> "quit";
                     default -> help();
                 };
@@ -86,7 +88,7 @@ public class ChessClient {
         return null;
     }
 
-    public String clear(String... params) throws ResponseException {
+    public String clear() throws ResponseException {
         server.deleteDataBase();
         return "DB cleared";
     }
@@ -146,12 +148,12 @@ public class ChessClient {
     public String listGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 0) {
-            gamelist = server.getListGame(authToken);
+            GamesListData gameList = getList();
             var result = new StringBuilder();
 
             int displayIndex = 1;
 
-            for (GameData game : gamelist.games()) {
+            for (GameData game : gameList.games()) {
                 String whitePlayer = game.whiteUsername() != null ? game.whiteUsername() : "Empty";
                 String blackPlayer = game.blackUsername() != null ? game.blackUsername() : "Empty";
 
@@ -172,24 +174,31 @@ public class ChessClient {
     public String joinGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 2) {
-            server.putJoinGame(authToken, params[1], Integer.parseInt(params[0]));
+            // list games
+            GameData game = getGame(Integer.parseInt(params[0]));
 
-            return String.format("Game %s joined as %s", params[0], params[1]);
+            assert game != null;
+            server.putJoinGame(authToken, params[1], game.gameID());
+
+
+            return renderGameBoard(game.game(), params[0]);
         }
         throw new ResponseException(ResponseException.Code.ClientError, "Expected: <ID> <WHITE|BLACK>");
 
     }
 
-
     public String observeGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 1) {
+            GameData game = getGame(Integer.parseInt(params[0]));
+            assert game != null;
+            return renderGameBoard(game.game(), "white");
+
 
         }
         throw new ResponseException(ResponseException.Code.ClientError, "Expected: <ID>");
 
     }
-
 
     public String help() {
         if (state == State.SIGNEDOUT) {
@@ -219,28 +228,57 @@ public class ChessClient {
         }
     }
 
-    private String GamePlayUI(ChessBoard board) {
+    private GamesListData getList() throws ResponseException {
+        return server.getListGame(authToken);
+    }
 
-        StringBuilder sBoard;
-        sBoard = new StringBuilder();
-
-        var pieceColor = null;
-        var pieceType = null;
-
-        for (int row = 0; row < 8; row++) {
-            String sRow = "";
-            for (int col = 0; col < 8; col++) {
-                ChessPiece piece = board[row][col];
-                pieceColor = piece.getTeamColor();
-                pieceType = piece.getPieceType();
-
-
+    private GameData getGame(int gameID) throws ResponseException {
+        var gameList = getList();
+        int count = 1;
+        for (var game : gameList.games()) {
+            if (count++ == gameID) {
+                return game;
             }
-            sBoard.append(sRow);
+        }
+        return null;
+    }
 
+    private String renderGameBoard(ChessGame game, String color) {
+        StringBuilder sBoard = new StringBuilder();
+        ChessBoard board = game.getBoard();
+
+        boolean isWhite = color == null || color.equalsIgnoreCase("WHITE");
+
+        for (int displayRow = 1; displayRow <= 8; displayRow++) {
+
+            int row = isWhite ? (9 - displayRow) : displayRow;
+
+            for (int displayCol = 1; displayCol <= 8; displayCol++) {
+
+                int col = isWhite ? displayCol : (9 - displayCol);
+
+                ChessPosition position = new ChessPosition(row, col);
+                ChessPiece piece = board.getPiece(position);
+
+
+                boolean isLightSquare = ((row + col) % 2 != 0);
+                String bgColor = isLightSquare ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK;
+
+
+                String pieceText = "   "; // Default to empty square
+                String textColor = "";
+
+                if (piece != null) {
+                    pieceText = " " + piece.toString() + " ";
+                    textColor = (piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE;
+                }
+
+                sBoard.append(bgColor).append(textColor).append(pieceText);
+            }
+
+            sBoard.append(RESET_BG_COLOR + RESET_TEXT_COLOR).append("\n");
         }
 
-
-        return "";
+        return sBoard.toString();
     }
 }
