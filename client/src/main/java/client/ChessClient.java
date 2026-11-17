@@ -203,8 +203,8 @@ public class ChessClient {
 
                 return renderGameBoard(game.game(), params[1]);
 
-            } catch (NumberFormatException e) {
-                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Game ID must be a number.");
+            } catch (Exception e) {
+                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Unable to join game.");
             }
         }
         throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <ID> <WHITE|BLACK>");
