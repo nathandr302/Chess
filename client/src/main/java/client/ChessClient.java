@@ -41,8 +41,7 @@ public class ChessClient {
                 result = eval(line);
                 System.out.print(SET_TEXT_COLOR_BLUE + result);
             } catch (Throwable e) {
-                var msg = e.toString();
-                System.out.print(msg);
+                System.out.print(SET_TEXT_COLOR_RED + e.getMessage() + "\n");
             }
         }
         System.out.println();
@@ -50,42 +49,41 @@ public class ChessClient {
 
     private void printPrompt() {
         if (state == State.SIGNEDOUT) {
-            System.out.print(RESET_TEXT_COLOR + "\n LOGGED OUT" + " >>> " + SET_TEXT_COLOR_GREEN);
+            System.out.print(RESET_ALL + "\n LOGGED OUT" + " >>> " + SET_TEXT_COLOR_GREEN);
         } else if (state == State.SIGNEDIN) {
-            System.out.print(RESET_TEXT_COLOR + "\n LOGGED IN" + " >>> " + SET_TEXT_COLOR_GREEN);
+            System.out.print(RESET_ALL + "\n LOGGED IN" + " >>> " + SET_TEXT_COLOR_GREEN);
 
         }
     }
 
-    public String eval(String input) {
-        try {
-            String[] tokens = input.toLowerCase().split(" ");
-            String cmd = (tokens.length > 0) ? tokens[0] : "help";
-            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            if (state == State.SIGNEDOUT) {
-                return switch (cmd) {
-                    case "register" -> register(params);
-                    case "login" -> logIn(params);
-                    case "clear" -> clear();
-                    case "quit" -> "quit";
-                    default -> help();
-                };
-            } else if (state == State.SIGNEDIN) {
-                return switch (cmd) {
-                    case "create" -> createGame(params);
-                    case "list" -> listGame(params);
-                    case "join" -> joinGame(params);
-                    case "observe" -> observeGame(params);
-                    case "logout" -> logout(params);
-                    case "quit" -> "quit";
-                    default -> help();
-                };
+    public String eval(String input) throws ResponseException {
+        String[] tokens = input.toLowerCase().split(" ");
+        String cmd = (tokens.length > 0) ? tokens[0] : "help";
+        String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+        if (state == State.SIGNEDOUT) {
+            return switch (cmd) {
+                case "register" -> register(params);
+                case "login" -> logIn(params);
+                case "clear" -> clear();
+                case "quit" -> "quit";
+                case "help" -> help();
+                default -> "Unknown Command. Type 'help' for options.";
+            };
+        } else if (state == State.SIGNEDIN) {
+            return switch (cmd) {
+                case "create" -> createGame(params);
+                case "list" -> listGame(params);
+                case "join" -> joinGame(params);
+                case "observe" -> observeGame(params);
+                case "logout" -> logout(params);
+                case "quit" -> "quit";
+                case "help" -> help();
+                default -> "Unknown Command. Type 'help' for options.";
+            };
 
-            }
-        } catch (ResponseException ex) {
-            return ex.getMessage();
         }
-        return null;
+        return "Unknown State.";
+
     }
 
     public String clear() throws ResponseException {
@@ -95,108 +93,141 @@ public class ChessClient {
 
     public String logIn(String... params) throws ResponseException {
         if (params.length == 2) {
-            AuthData authData = server.postLoginUser(params[0], params[1]);
-            state = State.SIGNEDIN;
-            visitorName = authData.username();
-            authToken = authData.authToken();
+            try {
+                AuthData authData = server.postLoginUser(params[0], params[1]);
+                state = State.SIGNEDIN;
+                visitorName = authData.username();
+                authToken = authData.authToken();
 
-            return String.format("Logged in as %s", visitorName);
+                return String.format("Logged in as %s", visitorName);
+            } catch (Exception e) {
+                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Login failed. Please check your username and password.");
+            }
         }
-        throw new ResponseException(ResponseException.Code.ClientError, "Expected: <username> <password>");
+        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <username> <password>");
 
     }
 
     public String register(String... params) throws ResponseException {
         if (params.length == 3) {
-            AuthData authData = server.postRegisterUser(params[0], params[1], params[2]);
-            state = State.SIGNEDIN;
-            visitorName = authData.username();
-            authToken = authData.authToken();
+            try {
+                AuthData authData = server.postRegisterUser(params[0], params[1], params[2]);
+                state = State.SIGNEDIN;
+                visitorName = authData.username();
+                authToken = authData.authToken();
 
-            return String.format("Logged in as %s", visitorName);
+                return String.format("Logged in as %s", visitorName);
 
+            } catch (Exception e) {
+                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Registration failed. That username might already be taken.");
+            }
         }
-        throw new ResponseException(ResponseException.Code.ClientError, "Expected: <username> <password> <email>");
+        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <username> <password> <email>");
 
     }
 
     public String logout(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 0) {
-            server.deleteLogoutUser(authToken);
-            state = State.SIGNEDOUT;
-            authToken = null;
+            try {
+                server.deleteLogoutUser(authToken);
+                state = State.SIGNEDOUT;
+                authToken = null;
 
-            return String.format("%s logged out", visitorName);
-
+                return String.format("%s logged out", visitorName);
+            } catch (Exception e) {
+                throw new ResponseException(SET_TEXT_COLOR_RED + "SERVER ERROR: LOGOUT not successful ");
+            }
         }
-        throw new ResponseException(ResponseException.Code.ClientError, "BAD LOGOUT");
-
+        return "";
     }
 
     public String createGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 1) {
-            int gameID = server.postCreateGame(authToken, params[0]);
-            return String.format("Game Created. Name: %s ID: %d", params[0], gameID);
+            try {
+                int gameID = server.postCreateGame(authToken, params[0]);
+                return String.format("Game Created. Name: %s ID: %d", params[0], gameID);
+            } catch (ResponseException e) {
+                throw new ResponseException(SET_TEXT_COLOR_RED + "SERVER ERROR: CREATEGAME not successful");
+            }
 
         }
-        throw new ResponseException(ResponseException.Code.ClientError, "Expected: <NAME>");
+        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <NAME>");
 
     }
 
     public String listGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 0) {
-            GamesListData gameList = getList();
-            var result = new StringBuilder();
+            try {
+                GamesListData gameList = getList();
+                var result = new StringBuilder();
 
-            int displayIndex = 1;
+                int displayIndex = 1;
 
-            for (GameData game : gameList.games()) {
-                String whitePlayer = game.whiteUsername() != null ? game.whiteUsername() : "Empty";
-                String blackPlayer = game.blackUsername() != null ? game.blackUsername() : "Empty";
+                for (GameData game : gameList.games()) {
+                    String whitePlayer = game.whiteUsername() != null ? game.whiteUsername() : "Empty";
+                    String blackPlayer = game.blackUsername() != null ? game.blackUsername() : "Empty";
 
-                result.append(String.format("%d. %s (White: %s | Black: %s)\n",
-                        displayIndex,
-                        game.gameName(),
-                        whitePlayer,
-                        blackPlayer));
+                    result.append(String.format("%d. %s (White: %s | Black: %s)\n",
+                            displayIndex,
+                            game.gameName(),
+                            whitePlayer,
+                            blackPlayer));
 
-                displayIndex++;
+                    displayIndex++;
+                }
+                return result.toString();
+            } catch (Exception e) {
+                throw new ResponseException(SET_TEXT_COLOR_RED + "SERVER ERROR: LIST not successful");
             }
-            return result.toString();
         }
-        throw new ResponseException(ResponseException.Code.ClientError, "BAD LISTGAME");
+        throw new ResponseException(SET_TEXT_COLOR_RED + "BAD LISTGAME");
 
     }
 
     public String joinGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 2) {
-            // list games
-            GameData game = getGame(Integer.parseInt(params[0]));
+            try {
+                int gameIndex = Integer.parseInt(params[0]);
+                GameData game = getGame(gameIndex);
 
-            assert game != null;
-            server.putJoinGame(authToken, params[1], game.gameID());
+                if (game == null) {
+                    throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Game not found.");
+                }
 
+                // Convert to uppercase for the backend enum, but pass original for frontend render
+                server.putJoinGame(authToken, params[1].toUpperCase(), game.gameID());
 
-            return renderGameBoard(game.game(), params[1]);
+                return renderGameBoard(game.game(), params[1]);
+
+            } catch (NumberFormatException e) {
+                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Game ID must be a number.");
+            }
         }
-        throw new ResponseException(ResponseException.Code.ClientError, "Expected: <ID> <WHITE|BLACK>");
+        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <ID> <WHITE|BLACK>");
 
     }
 
     public String observeGame(String... params) throws ResponseException {
         assertSignedIn();
         if (params.length == 1) {
-            GameData game = getGame(Integer.parseInt(params[0]));
-            assert game != null;
-            return renderGameBoard(game.game(), "WHITE");
+            try {
+                GameData game = getGame(Integer.parseInt(params[0]));
 
+                if (game == null) {
+                    throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Game not found.");
+                }
 
+                return renderGameBoard(game.game(), "WHITE");
+
+            } catch (NumberFormatException e) {
+                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Game ID must be a number.");
+            }
         }
-        throw new ResponseException(ResponseException.Code.ClientError, "Expected: <ID>");
+        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <ID>");
 
     }
 
@@ -224,7 +255,7 @@ public class ChessClient {
 
     private void assertSignedIn() throws ResponseException {
         if (state == State.SIGNEDOUT) {
-            throw new ResponseException(ResponseException.Code.ClientError, "You must sign in");
+            throw new ResponseException("You must sign in");
         }
     }
 
