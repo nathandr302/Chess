@@ -32,6 +32,7 @@ public class EscapeSequences {
     public static final String BLACK_ROOK = " ♜ "; //" \u265E ";
     public static final String BLACK_PAWN = " ♟ "; //" \u265F ";
     public static final String EMPTY = " \u2003 ";
+    public static final String RESET_ALL = "\u001B[0m";
     private static final String UNICODE_ESCAPE = "\u001b";
     public static final String ERASE_SCREEN = UNICODE_ESCAPE + "[H" + UNICODE_ESCAPE + "[2J";
     public static final String ERASE_LINE = UNICODE_ESCAPE + "[2K";

@@ -181,7 +181,7 @@ public class ChessClient {
             server.putJoinGame(authToken, params[1], game.gameID());
 
 
-            return renderGameBoard(game.game(), params[0]);
+            return renderGameBoard(game.game(), params[1]);
         }
         throw new ResponseException(ResponseException.Code.ClientError, "Expected: <ID> <WHITE|BLACK>");
 
@@ -192,7 +192,7 @@ public class ChessClient {
         if (params.length == 1) {
             GameData game = getGame(Integer.parseInt(params[0]));
             assert game != null;
-            return renderGameBoard(game.game(), "white");
+            return renderGameBoard(game.game(), "WHITE");
 
 
         }
@@ -249,21 +249,32 @@ public class ChessClient {
 
         boolean isWhite = color == null || color.equalsIgnoreCase("WHITE");
 
-        for (int displayRow = 1; displayRow <= 8; displayRow++) {
+        StringBuilder headerRow = new StringBuilder();
+        headerRow.append(SET_BG_COLOR_MAGENTA).append("   "); // Blank corner above row numbers
+        for (int displayCol = 1; displayCol <= 8; displayCol++) {
+            int col = isWhite ? displayCol : (9 - displayCol);
+            char colLetter = (char) ('a' + col - 1); // Maps 1->'a', 2->'b', etc.
+            headerRow.append(SET_TEXT_COLOR_GREEN).append(" ").append(colLetter).append(" ");
+        }
+        headerRow.append("   ").append(RESET_ALL).append("\n");
 
+
+        sBoard.append(headerRow);
+
+
+        for (int displayRow = 1; displayRow <= 8; displayRow++) {
             int row = isWhite ? (9 - displayRow) : displayRow;
 
+            String appre = String.format(SET_BG_COLOR_MAGENTA + SET_TEXT_COLOR_GREEN + " %s ", row);
+            sBoard.append(appre); // Left row number
+
             for (int displayCol = 1; displayCol <= 8; displayCol++) {
-
                 int col = isWhite ? displayCol : (9 - displayCol);
-
                 ChessPosition position = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(position);
 
-
                 boolean isLightSquare = ((row + col) % 2 != 0);
                 String bgColor = isLightSquare ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK;
-
 
                 String pieceText = "   "; // Default to empty square
                 String textColor = "";
@@ -276,9 +287,13 @@ public class ChessClient {
                 sBoard.append(bgColor).append(textColor).append(pieceText);
             }
 
-            sBoard.append(RESET_BG_COLOR + RESET_TEXT_COLOR).append("\n");
+            sBoard.append(appre); // Right row number
+            sBoard.append(RESET_ALL).append("\n");
         }
 
+        sBoard.append(headerRow);
+
         return sBoard.toString();
+
     }
 }
