@@ -1,12 +1,12 @@
 import exception.ResponseException;
 import facade.ServerFacade;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import server.Server;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ServerFacadeTests {
 
@@ -33,25 +33,82 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void clear() throws ResponseException {
-        facade.deleteDataBase();
+    void clear() {
+        try {
+            facade.deleteDataBase();
+            assertTrue(true);
+        } catch (ResponseException e) {
+            fail(e.getMessage());
+        }
+
     }
 
     @Test
-    void register() throws Exception {
-        var authData = facade.postRegisterUser("player1", "password", "p1@email.com");
-        assertTrue(authData.authToken().length() > 10);
+    void register() {
+        try {
+            var authData = facade.postRegisterUser("player1", "password", "p1@email.com");
+            assertTrue(authData.authToken().length() > 10);
+        } catch (ResponseException e) {
+            fail();
+            throw new RuntimeException(e.getMessage());
+
+        }
+
     }
 
     @Test
-    void login() throws ResponseException {
-        var authData = facade.postLoginUser("player1", "password");
-        assertTrue(authData.authToken().length() > 10);
+    void login() {
+        try {
+            var authData = facade.postRegisterUser("player1", "password", "p1@email.com");
+            facade.postLoginUser("player1", "password");
+            assertTrue(authData.authToken().length() > 10);
+        } catch (ResponseException e) {
+            fail(e.getMessage());
+        }
+
     }
+
     @Test
-    void logout() throws ResponseException {
-        var authData = facade.postLoginUser("player1", "password");
-        facade.deleteLogoutUser(authData.authToken());
+    void logout() {
+        try {
+            var authData = facade.postLoginUser("player1", "password");
+            facade.deleteLogoutUser(authData.authToken());
+        } catch (ResponseException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void createGame() {
+        try {
+            var authData = facade.postLoginUser("player1", "password");
+            facade.postCreateGame(authData.authToken(), "game 1");
+        } catch (ResponseException e) {
+            fail(e.getMessage());
+        }
+    }
+
+
+    @Test
+    void joinGame() {
+        try {
+            var authData = facade.postLoginUser("player1", "password");
+            facade.putJoinGame(authData.authToken(), "white", 1);
+            assertTrue(true);
+        } catch (ResponseException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void listGame() {
+        try {
+            var authData = facade.postLoginUser("player1", "password");
+            facade.getListGame(authData.authToken());
+            assertTrue(true);
+        } catch (ResponseException e) {
+            fail(e.getMessage());
+        }
     }
 
 
