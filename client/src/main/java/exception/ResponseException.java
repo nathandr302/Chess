@@ -9,7 +9,7 @@ public class ResponseException extends Exception {
 
     private Code code = null;
 
-    public ResponseException(String message) {
+    public ResponseException(Code serverError, String message) {
         super(message);
         this.code = code;
     }
@@ -18,7 +18,7 @@ public class ResponseException extends Exception {
         var map = new Gson().fromJson(json, HashMap.class);
         var status = Code.valueOf(map.get("status").toString());
         String message = map.get("message").toString();
-        return new ResponseException(message);
+        return new ResponseException(Code.ServerError, message);
     }
 
     public static Code fromHttpStatusCode(int httpStatusCode) {

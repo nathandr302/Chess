@@ -101,10 +101,10 @@ public class ChessClient {
 
                 return String.format("Logged in as %s", visitorName);
             } catch (Exception e) {
-                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Login failed. Please check your username and password.");
+                throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Error: Login failed. Please check your username and password.");
             }
         }
-        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <username> <password>");
+        throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Expected: <username> <password>");
 
     }
 
@@ -119,10 +119,10 @@ public class ChessClient {
                 return String.format("Logged in as %s", visitorName);
 
             } catch (Exception e) {
-                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Registration failed. That username might already be taken.");
+                throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Error: Registration failed. That username might already be taken.");
             }
         }
-        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <username> <password> <email>");
+        throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Expected: <username> <password> <email>");
 
     }
 
@@ -136,7 +136,7 @@ public class ChessClient {
 
                 return String.format("%s logged out", visitorName);
             } catch (Exception e) {
-                throw new ResponseException(SET_TEXT_COLOR_RED + "SERVER ERROR: LOGOUT not successful ");
+                throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "SERVER ERROR: LOGOUT not successful ");
             }
         }
         return "";
@@ -149,11 +149,11 @@ public class ChessClient {
                 int gameID = server.postCreateGame(authToken, params[0]);
                 return String.format("Game Created. Name: %s ID: %d", params[0], gameID);
             } catch (ResponseException e) {
-                throw new ResponseException(SET_TEXT_COLOR_RED + "SERVER ERROR: CREATEGAME not successful");
+                throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "SERVER ERROR: CREATEGAME not successful");
             }
 
         }
-        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <NAME>");
+        throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Expected: <NAME>");
 
     }
 
@@ -180,10 +180,10 @@ public class ChessClient {
                 }
                 return result.toString();
             } catch (Exception e) {
-                throw new ResponseException(SET_TEXT_COLOR_RED + "SERVER ERROR: LIST not successful");
+                throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "SERVER ERROR: LIST not successful");
             }
         }
-        throw new ResponseException(SET_TEXT_COLOR_RED + "BAD LISTGAME");
+        throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "BAD LISTGAME");
 
     }
 
@@ -195,7 +195,7 @@ public class ChessClient {
                 GameData game = getGame(gameIndex);
 
                 if (game == null) {
-                    throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Game not found.");
+                    throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Error: Game not found.");
                 }
 
                 // Convert to uppercase for the backend enum, but pass original for frontend render
@@ -204,10 +204,10 @@ public class ChessClient {
                 return renderGameBoard(game.game(), params[1]);
 
             } catch (Exception e) {
-                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Unable to join game.");
+                throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Error: Unable to join game.");
             }
         }
-        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <ID> <WHITE|BLACK>");
+        throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Expected: <ID> <WHITE|BLACK>");
 
     }
 
@@ -218,16 +218,16 @@ public class ChessClient {
                 GameData game = getGame(Integer.parseInt(params[0]));
 
                 if (game == null) {
-                    throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Game not found.");
+                    throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Error: Game not found.");
                 }
 
                 return renderGameBoard(game.game(), "WHITE");
 
             } catch (NumberFormatException e) {
-                throw new ResponseException(SET_TEXT_COLOR_RED + "Error: Game ID must be a number.");
+                throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Error: Game ID must be a number.");
             }
         }
-        throw new ResponseException(SET_TEXT_COLOR_RED + "Expected: <ID>");
+        throw new ResponseException(ResponseException.Code.ServerError, SET_TEXT_COLOR_RED + "Expected: <ID>");
 
     }
 
@@ -255,7 +255,7 @@ public class ChessClient {
 
     private void assertSignedIn() throws ResponseException {
         if (state == State.SIGNEDOUT) {
-            throw new ResponseException("You must sign in");
+            throw new ResponseException(ResponseException.Code.ServerError, "You must sign in");
         }
     }
 
