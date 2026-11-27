@@ -1,10 +1,9 @@
 package server.websocket;
 
+import chess.ChessMove;
 import com.google.gson.Gson;
 import io.javalin.websocket.*;
 import websocket.commands.UserGameCommand;
-
-import java.io.IOException;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
 
@@ -18,24 +17,20 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     @Override
     public void handleMessage(WsMessageContext ctx) {
-        try {
-            UserGameCommand action = new Gson().fromJson(ctx.message(), UserGameCommand.class);
-            switch (action.getCommandType()) {
-                case CONNECT -> connect();
-                case MAKE_MOVE -> makeMove();
-                case LEAVE -> leave();
-                case RESIGN -> resign();
-
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        UserGameCommand action = new Gson().fromJson(ctx.message(), UserGameCommand.class);
+        switch (action.getCommandType()) {
+            case CONNECT -> connect();
+            case MAKE_MOVE -> makeMove();
+            case LEAVE -> leave();
+            case RESIGN -> resign();
+            default -> throw new IllegalStateException("Unexpected value: " + action.getCommandType());
         }
     }
 
-    private void connect() {
+    private void connect(String authToken, ) {
     }
 
-    private void makeMove() {
+    private void makeMove(ChessMove move) {
     }
 
     private void leave() {

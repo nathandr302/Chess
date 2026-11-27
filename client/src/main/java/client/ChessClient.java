@@ -5,11 +5,14 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import client.websocket.NotificationHandler;
+import client.websocket.WebSocketFacade;
 import exception.ResponseException;
 import facade.ServerFacade;
 import model.AuthData;
 import model.GameData;
 import model.GamesListData;
+import websocket.messages.ServerMessage;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -17,15 +20,17 @@ import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
-public class ChessClient {
+public class ChessClient implements NotificationHandler {
     private final ServerFacade server;
+    private final WebSocketFacade ws;
 
     private String authToken = null;
     private String visitorName = null;
     private State state = State.SIGNEDOUT;
 
-    public ChessClient(String serverUrl) {
+    public ChessClient(String serverUrl) throws ResponseException {
         server = new ServerFacade(serverUrl);
+        ws = new WebSocketFacade(serverUrl, this);
     }
 
     public void run() {
@@ -201,6 +206,7 @@ public class ChessClient {
                 // Convert to uppercase for the backend enum, but pass original for frontend render
                 server.putJoinGame(authToken, params[1].toUpperCase(), game.gameID());
 
+
                 return renderGameBoard(game.game(), params[1]);
 
             } catch (Exception e) {
@@ -325,6 +331,13 @@ public class ChessClient {
         sBoard.append(headerRow);
 
         return sBoard.toString();
+
+    }
+
+    @Override
+    public void notify(ServerMessage notification) {
+        System.out.println(SET_TEXT_COLOR_RED + notification.toString());
+        printPrompt();
 
     }
 }
